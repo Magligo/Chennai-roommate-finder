@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | Chennai Roommate Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 text-gray-900 h-screen flex flex-col">
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html"
+                    class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChennaiRooms</a>
+                <div class="flex space-x-6 items-center" id="nav-links"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-hidden flex max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm w-full flex overflow-hidden">
+            <!-- Sidebar / Conversations List -->
+            <div class="w-1/3 border-r border-gray-50 overflow-y-auto">
+                <div class="p-6 border-b border-gray-50">
+                    <h2 class="text-xl font-bold">Inbox</h2>
+                </div>
+                <div id="chats-list">
+                    <p class="p-6 text-gray-500 text-sm">No messages yet.</p>
+                </div>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="flex-1 flex flex-col bg-gray-50/30">
+                <div id="chat-header" class="p-6 border-b border-gray-100 bg-white hidden">
+                    <h3 class="font-bold text-lg" id="active-chat-name">Select a conversation</h3>
+                </div>
+
+                <div id="messages-window" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <div class="h-full flex items-center justify-center text-gray-400">
+                        <p>Select a message to start chatting</p>
+                    </div>
+                </div>
+
+                <div id="message-input-area" class="p-6 border-t border-gray-100 bg-white hidden">
+                    <form id="send-form" class="flex gap-4">
+                        <input type="text" id="message-input" placeholder="Type your message..."
+                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script>
+        let currentReceiverId = null;
+        let allMessages = [];
+
+        document.addEventListener('DOMContentLoaded', loadData);
+
+        async function loadData() {
+            try {
+                allMessages = await api.social.getMessages();
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                // Group by conversation
+                const conversations = {};
+                allMessages.forEach(msg => {
+                    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+                    const otherName = msg.sender_id === user.id ? msg.receiver_name : msg.sender_name;
+                    if (!conversations[otherId]) {
+                        conversations[otherId] = { name: otherName, lastMessage: msg.message_text };
+                    }
+                });
+
+                const chatsList = document.getElementById('chats-list');
+                const conversationIds = Object.keys(conversations);
+
+                if (conversationIds.length > 0) {
+                    chatsList.innerHTML = conversationIds.map(id => `
+                        <button onclick="selectChat(${id}, '${conversations[id].name}')" class="w-full text-left p-6 hover:bg-blue-50 border-b border-gray-50 transition group">
+                            <p class="font-bold group-hover:text-blue-600">${conversations[id].name}</p>
+                            <p class="text-sm text-gray-500 truncate mt-1">${conversations[id].lastMessage}</p>
+                        </button>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function selectChat(id, name) {
+            currentReceiverId = id;
+            document.getElementById('chat-header').classList.remove('hidden');
+            document.getElementById('message-input-area').classList.remove('hidden');
+            document.getElementById('active-chat-name').textContent = name;
+            renderMessages();
+        }
+
+        function renderMessages() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const container = document.getElementById('messages-window');
+            const chatMessages = allMessages.filter(m =>
+                (m.sender_id === user.id && m.receiver_id === currentReceiverId) ||
+                (m.sender_id === currentReceiverId && m.receiver_id === user.id)
+            ).reverse();
+
+            container.innerHTML = chatMessages.map(m => `
+                <div class="flex ${m.sender_id === user.id ? 'justify-end' : 'justify-start'}">
+                    <div class="max-w-[70%] p-4 rounded-2xl ${m.sender_id === user.id ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'} shadow-sm">
+                        <p>${m.message_text}</p>
+                        <p class="text-[10px] mt-1 opacity-70 ${m.sender_id === user.id ? 'text-right' : 'text-left'}">${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        document.getElementById('send-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (!text || !currentReceiverId) return;
+
+            try {
+                await api.social.sendMessage(currentReceiverId, text);
+                input.value = '';
+                await loadData();
+                renderMessages();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

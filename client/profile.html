@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Chennai Roommate Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+    <nav class="fixed w-full z-50 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html"
+                    class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChennaiRooms</a>
+                <div class="flex space-x-6 items-center" id="nav-links"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-12 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="h-32 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+            <div class="p-8 -mt-16 text-center">
+                <div class="w-32 h-32 bg-white rounded-full mx-auto p-1 shadow-lg border border-gray-100 mb-6">
+                    <div class="w-full h-full bg-blue-100 rounded-full flex items-center justify-center text-3xl font-bold text-blue-600"
+                        id="profile-initial">U</div>
+                </div>
+                <h1 class="text-3xl font-extrabold text-gray-900" id="profile-name">Loading...</h1>
+                <p class="text-gray-500 font-medium" id="profile-occupation"></p>
+            </div>
+
+            <div class="p-8 border-t border-gray-50 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Email</label>
+                        <p class="text-lg font-semibold" id="profile-email">---</p>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Phone</label>
+                        <p class="text-lg font-semibold" id="profile-phone">---</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Age</label>
+                        <p class="text-lg font-semibold" id="profile-age">---</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Preferred
+                            Location</label>
+                        <p class="text-lg font-semibold" id="profile-location">---</p>
+                    </div>
+                </div>
+
+                <div class="pt-8">
+                    <button onclick="logout()"
+                        class="w-full bg-red-50 text-red-600 py-4 rounded-2xl font-bold hover:bg-red-100 transition">Logout
+                        from all devices</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const profile = await api.auth.getProfile();
+                document.getElementById('profile-name').textContent = profile.name;
+                document.getElementById('profile-initial').textContent = profile.name.charAt(0).toUpperCase();
+                document.getElementById('profile-occupation').textContent = profile.occupation || 'No occupation specified';
+                document.getElementById('profile-email').textContent = profile.email;
+                document.getElementById('profile-phone').textContent = profile.phone || 'Not provided';
+                document.getElementById('profile-age').textContent = profile.age || 'Not shared';
+                document.getElementById('profile-location').textContent = profile.preferred_location || 'Not specified';
+            } catch (err) {
+                console.error(err);
+                if (err.message.includes('authorization denied')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
