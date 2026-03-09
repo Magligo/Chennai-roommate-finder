@@ -26,28 +26,55 @@
                 <div class="p-6 border-b border-gray-50">
                     <h2 class="text-xl font-bold">Inbox</h2>
                 </div>
-                <div id="chats-list">
-                    <p class="p-6 text-gray-500 text-sm">No messages yet.</p>
+                <div id="chats-list" class="divide-y divide-gray-50">
+                    <div class="p-8 text-center">
+                        <div class="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
+                                </path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-900 font-semibold mb-1">No messages yet</p>
+                        <p class="text-gray-500 text-xs mb-6 px-4">Find a room and message the owner to start a
+                            conversation.</p>
+                        <a href="rooms.html"
+                            class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition">
+                            Find Rooms
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="flex-1 flex flex-col bg-gray-50/30">
-                <div id="chat-header" class="p-6 border-b border-gray-100 bg-white hidden">
+                <div id="chat-header" class="p-6 border-b border-gray-100 bg-white">
                     <h3 class="font-bold text-lg" id="active-chat-name">Select a conversation</h3>
                 </div>
 
-                <div id="messages-window" class="flex-1 overflow-y-auto p-6 space-y-4">
-                    <div class="h-full flex items-center justify-center text-gray-400">
-                        <p>Select a message to start chatting</p>
+                <div id="messages-window" class="h-[70vh] overflow-y-auto p-6 space-y-4">
+                    <div class="h-full flex flex-col items-center justify-center text-gray-400">
+                        <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
+                        </svg>
+                        <p class="text-lg font-medium">Your Messages</p>
+                        <p class="text-sm">Select a person from the inbox to start chatting.</p>
                     </div>
                 </div>
 
-                <div id="message-input-area" class="p-6 border-t border-gray-100 bg-white hidden">
-                    <form id="send-form" class="flex gap-4">
-                        <input type="text" id="message-input" placeholder="Type your message..."
-                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
-                        <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition">Send</button>
+                <div id="message-input-area" class="border-t p-3 bg-white">
+                    <form id="send-form" class="flex items-center gap-3">
+                        <input type="text" id="message-input" placeholder="Please select a chat to start typing..."
+                            disabled title="Select a conversation from the sidebar to type a message"
+                            class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all">
+                        <button type="submit" id="send-btn" disabled
+                            class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -58,79 +85,176 @@
     <script src="js/messages.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
-        let currentReceiverId = null;
-        let allMessages = [];
+        let currentConversationId = null;
+        let conversations = [];
 
-        document.addEventListener('DOMContentLoaded', loadData);
+        document.addEventListener('DOMContentLoaded', init);
 
-        async function loadData() {
-            try {
-                allMessages = await messages.getMessages();
-                const user = JSON.parse(localStorage.getItem('user'));
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const conversationId = urlParams.get('conversationId');
+            const ownerId = urlParams.get('ownerId');
+            const roomId = urlParams.get('roomId');
 
-                const conversations = {};
-                allMessages.forEach(msg => {
-                    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-                    const otherName = msg.sender_id === user.id ? msg.receiver_name : msg.sender_name;
-                    if (!conversations[otherId]) {
-                        conversations[otherId] = { name: otherName, lastMessage: msg.message_text };
+            await loadConversations();
+
+            if (conversationId) {
+                currentConversationId = parseInt(conversationId);
+                const conv = conversations.find(c => c.id === currentConversationId);
+                if (conv) {
+                    selectConversation(conv.id, conv.other_user_name, conv.room_title);
+                } else {
+                    try {
+                        const newConv = await messages.getConversationById(currentConversationId);
+                        if (newConv) {
+                            const user = JSON.parse(localStorage.getItem('user'));
+                            const otherName = newConv.user1_id === user.id ? newConv.user2_name : newConv.user1_name;
+                            selectConversation(newConv.id, otherName, newConv.room_title);
+                        }
+                    } catch (err) {
+                        console.error("Error loading conversation:", err);
+                        updateInputState(true);
+                        renderMessages(currentConversationId);
                     }
-                });
+                }
+            } else if (ownerId && roomId) {
+                // New flow: handle ownerId and roomId
+                try {
+                    const response = await apiRequest('/conversations/start', {
+                        method: 'POST',
+                        body: JSON.stringify({ receiver_id: ownerId, room_id: roomId })
+                    });
+                    if (response && response.conversationId) {
+                        currentConversationId = response.conversationId;
+                        await loadConversations(); // Refresh list to include new one
+                        const conv = conversations.find(c => c.id === currentConversationId);
+                        if (conv) {
+                            selectConversation(conv.id, conv.other_user_name, conv.room_title);
+                        } else {
+                            // If still not in list, fetch it
+                            const newConv = await messages.getConversationById(currentConversationId);
+                            const user = JSON.parse(localStorage.getItem('user'));
+                            const otherName = newConv.user1_id === user.id ? newConv.user2_name : newConv.user1_name;
+                            selectConversation(newConv.id, otherName, newConv.room_title);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error starting conversation:", err);
+                    alert("Could not start conversation: " + err.message);
+                }
+            } else {
+                updateInputState(false);
+            }
+        }
 
+        function updateInputState(enabled) {
+            const input = document.getElementById('message-input');
+            const btn = document.getElementById('send-btn');
+            input.disabled = !enabled;
+            btn.disabled = !enabled;
+            input.placeholder = enabled ? "Type a message..." : "Select a chat to start typing...";
+        }
+
+        async function loadConversations() {
+            try {
+                conversations = await messages.getConversations();
                 const chatsList = document.getElementById('chats-list');
-                const conversationIds = Object.keys(conversations);
 
-                if (conversationIds.length > 0) {
-                    chatsList.innerHTML = conversationIds.map(id => `
-                        <button onclick="selectChat(${id}, '${conversations[id].name}')" class="w-full text-left p-6 hover:bg-blue-50 border-b border-gray-50 transition group">
-                            <p class="font-bold group-hover:text-blue-600">${conversations[id].name}</p>
-                            <p class="text-sm text-gray-500 truncate mt-1">${conversations[id].lastMessage}</p>
+                if (conversations.length > 0) {
+                    chatsList.innerHTML = conversations.map(c => `
+                        <button onclick="selectConversation(${c.id}, '${c.other_user_name}', '${c.room_title}')" 
+                                class="w-full text-left p-6 hover:bg-blue-50 border-b border-gray-50 transition group ${currentConversationId === c.id ? 'bg-blue-50' : ''}">
+                            <div class="flex justify-between items-start">
+                                <p class="font-bold group-hover:text-blue-600 flex items-center gap-2">
+                                    ${c.other_user_name}
+                                    ${c.unread_count > 0 ? `<span class="w-2 h-2 bg-blue-600 rounded-full"></span>` : ''}
+                                </p>
+                                <span class="text-[10px] text-gray-400">${c.last_message_time ? new Date(c.last_message_time).toLocaleDateString() : ''}</span>
+                            </div>
+                            <p class="text-xs text-blue-500 font-medium truncate mt-1">${c.room_title}</p>
+                            <p class="text-sm ${c.unread_count > 0 ? 'text-gray-900 font-semibold' : 'text-gray-500'} truncate mt-1">${c.last_message || 'No messages yet'}</p>
                         </button>
                     `).join('');
+                } else {
+                    // Handled by default HTML if needed, but reinforcing here
                 }
             } catch (err) {
                 console.error(err);
             }
         }
 
-        function selectChat(id, name) {
-            currentReceiverId = id;
-            document.getElementById('chat-header').classList.remove('hidden');
-            document.getElementById('message-input-area').classList.remove('hidden');
-            document.getElementById('active-chat-name').textContent = name;
-            renderMessages();
-        }
+        async function selectConversation(id, userName, roomTitle) {
+            currentConversationId = id;
+            updateInputState(true);
 
-        function renderMessages() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const container = document.getElementById('messages-window');
-            const chatMessages = allMessages.filter(m =>
-                (m.sender_id === user.id && m.receiver_id === currentReceiverId) ||
-                (m.sender_id === currentReceiverId && m.receiver_id === user.id)
-            ).reverse();
-
-            container.innerHTML = chatMessages.map(m => `
-                <div class="flex ${m.sender_id === user.id ? 'justify-end' : 'justify-start'}">
-                    <div class="max-w-[70%] p-4 rounded-2xl ${m.sender_id === user.id ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'} shadow-sm">
-                        <p>${m.message_text}</p>
-                        <p class="text-[10px] mt-1 opacity-70 ${m.sender_id === user.id ? 'text-right' : 'text-left'}">${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
+            document.getElementById('active-chat-name').innerHTML = `
+                <div class="flex flex-col">
+                    <span>${userName}</span>
+                    <span class="text-sm font-normal text-blue-500">${roomTitle}</span>
                 </div>
-            `).join('');
-            container.scrollTop = container.scrollHeight;
+            `;
+
+            // Update URL without refreshing
+            const newUrl = `${window.location.pathname}?conversationId=${id}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            try {
+                await messages.markRead(id);
+                if (window.checkAuth) window.checkAuth(); // Update navbar badge
+            } catch (err) {
+                console.error("Error marking read:", err);
+            }
+
+            await renderMessages(id);
+            await loadConversations();
         }
+
+        async function renderMessages(id) {
+            const container = document.getElementById('messages-window');
+            container.innerHTML = '<div class="h-[70vh] flex items-center justify-center text-gray-400"><p>Loading messages...</p></div>';
+
+            try {
+                const chatMessages = await messages.getMessagesByConversation(id);
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                if (chatMessages.length === 0) {
+                    container.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400"><p>No messages yet. Say hello!</p></div>';
+                    return;
+                }
+
+                container.innerHTML = chatMessages.map(m => `
+                    <div class="flex ${m.sender_id === user.id ? 'justify-end' : 'justify-start'}">
+                        <div class="max-w-[70%] p-3 rounded-2xl ${m.sender_id === user.id ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-gray-200 text-gray-900 rounded-tl-none'} shadow-sm">
+                            <p class="text-sm">${m.message_text}</p>
+                            <p class="text-[9px] mt-1 opacity-70 ${m.sender_id === user.id ? 'text-right' : 'text-left'}">${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>
+                    </div>
+                `).join('');
+                container.scrollTop = container.scrollHeight;
+            } catch (err) {
+                container.innerHTML = `<div class="h-full flex items-center justify-center text-red-500"><p>${err.message}</p></div>`;
+            }
+        }
+
+        // Handle Enter key for sending
+        document.getElementById('message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('send-form').dispatchEvent(new Event('submit'));
+            }
+        });
 
         document.getElementById('send-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const input = document.getElementById('message-input');
             const text = input.value.trim();
-            if (!text || !currentReceiverId) return;
+            if (!text || !currentConversationId) return;
 
             try {
-                await messages.sendMessage(currentReceiverId, text);
+                await messages.sendMessage(currentConversationId, text);
                 input.value = '';
-                await loadData();
-                renderMessages();
+                await renderMessages(currentConversationId);
+                await loadConversations();
             } catch (err) {
                 alert(err.message);
             }

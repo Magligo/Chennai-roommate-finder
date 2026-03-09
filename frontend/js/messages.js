@@ -1,8 +1,12 @@
 const messages = {
-    getMessages: () => apiRequest('/messages'),
-    sendMessage: (receiver_id, message_text) => apiRequest('/messages/send', {
+    getConversations: () => apiRequest('/conversations'),
+    getConversationById: (id) => apiRequest(`/conversations/${id}`),
+    getMessagesByConversation: (id) => apiRequest(`/messages/${id}`),
+    getUnreadCount: () => apiRequest('/messages/unread-count'),
+    markRead: (id) => apiRequest(`/messages/mark-read/${id}`, { method: 'PUT' }),
+    sendMessage: (conversation_id, message_text) => apiRequest('/messages/send', {
         method: 'POST',
-        body: JSON.stringify({ receiver_id, message_text })
+        body: JSON.stringify({ conversation_id, message_text })
     })
 };
 

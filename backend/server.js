@@ -23,6 +23,7 @@ app.use('/uploads', express.static(uploadsDir));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/rooms', require('./routes/roomRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/conversations', require('./routes/conversationRoutes'));
 app.use('/api/requests', require('./routes/requestRoutes'));
 
 // Root route for testing

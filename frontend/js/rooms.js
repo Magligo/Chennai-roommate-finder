@@ -22,15 +22,8 @@ const requestRoom = async (roomId, ownerId) => {
         return;
     }
 
-    try {
-        await apiRequest('/requests', {
-            method: 'POST',
-            body: JSON.stringify({ room_id: roomId, owner_id: ownerId })
-        });
-        alert('Request sent successfully! You can also message the owner.');
-    } catch (err) {
-        alert(err.message);
-    }
+    // Redirect to messages page with params as requested
+    window.location.href = `messages.html?ownerId=${ownerId}&roomId=${roomId}`;
 };
 
 const deleteRoom = async (roomId) => {

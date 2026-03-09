@@ -67,16 +67,39 @@ function initializeDatabase() {
             FOREIGN KEY (owner_id) REFERENCES users (id)
         )`);
 
+        // Conversations table
+        db.run(`CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user1_id INTEGER,
+            user2_id INTEGER,
+            room_id INTEGER,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user1_id) REFERENCES users (id),
+            FOREIGN KEY (user2_id) REFERENCES users (id),
+            FOREIGN KEY (room_id) REFERENCES rooms (room_id)
+        )`);
+
         // Messages table
         db.run(`CREATE TABLE IF NOT EXISTS messages (
-            message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id INTEGER,
             sender_id INTEGER,
             receiver_id INTEGER,
             message_text TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            is_read INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (conversation_id) REFERENCES conversations (id),
             FOREIGN KEY (sender_id) REFERENCES users (id),
             FOREIGN KEY (receiver_id) REFERENCES users (id)
-        )`);
+        )`, () => {
+            // Safe migrations: Try adding columns if the table already existed from an older version
+            db.run(`ALTER TABLE messages ADD COLUMN receiver_id INTEGER`, (err) => {
+                // Ignore error if column already exists
+            });
+            db.run(`ALTER TABLE messages ADD COLUMN is_read INTEGER DEFAULT 0`, (err) => {
+                // Ignore error if column already exists
+            });
+        });
     });
 }
 
