@@ -103,12 +103,12 @@
 
             try {
                 const reqs = await requests.getRequests();
-                const msgs = await messages.getMessages();
+                const convos = await messages.getConversations();
                 const allRooms = await rooms.getAll();
                 const userRooms = allRooms.filter(r => r.user_id === user.id);
 
                 document.getElementById('req-count').textContent = reqs.filter(r => r.owner_id === user.id && r.status === 'pending').length;
-                document.getElementById('msg-count').textContent = msgs.length;
+                document.getElementById('msg-count').textContent = convos.length;
                 document.getElementById('post-count').textContent = userRooms.length;
 
                 const reqList = document.getElementById('requests-list');

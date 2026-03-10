@@ -7,10 +7,68 @@
     <title>Messages | Chennai Roommate Finder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Chat bubble styles */
+        .bubble-sent {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #fff;
+            border-radius: 18px 18px 4px 18px;
+            max-width: 72%;
+            align-self: flex-end;
+        }
+
+        .bubble-received {
+            background: #f3f4f6;
+            color: #111827;
+            border-radius: 18px 18px 18px 4px;
+            max-width: 72%;
+            align-self: flex-start;
+        }
+
+        /* Thread container scroll */
+        #chat-thread {
+            scroll-behavior: smooth;
+        }
+
+        /* Conversation card active state */
+        .conv-card.active {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        /* Textarea auto-resize feel */
+        #msg-input {
+            resize: none;
+            max-height: 120px;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.25s ease;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 h-screen flex flex-col">
-    <nav class="bg-white border-b border-gray-200">
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white border-b border-gray-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="index.html"
@@ -20,245 +78,248 @@
         </div>
     </nav>
 
-    <main class="flex-1 overflow-hidden flex max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm w-full flex overflow-hidden">
-            <div class="w-1/3 border-r border-gray-50 overflow-y-auto">
-                <div class="p-6 border-b border-gray-50">
-                    <h2 class="text-xl font-bold">Inbox</h2>
-                </div>
-                <div id="chats-list" class="divide-y divide-gray-50">
-                    <div class="p-8 text-center">
-                        <div class="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
-                                </path>
-                            </svg>
-                        </div>
-                        <p class="text-gray-900 font-semibold mb-1">No messages yet</p>
-                        <p class="text-gray-500 text-xs mb-6 px-4">Find a room and message the owner to start a
-                            conversation.</p>
-                        <a href="rooms.html"
-                            class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition">
-                            Find Rooms
-                        </a>
-                    </div>
-                </div>
+    <div class="pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Messages</h1>
+                <p class="text-gray-500 mt-1">Your direct conversations with room owners and seekers.</p>
             </div>
-
-            <div class="flex-1 flex flex-col bg-gray-50/30">
-                <div id="chat-header" class="p-6 border-b border-gray-100 bg-white">
-                    <h3 class="font-bold text-lg" id="active-chat-name">Select a conversation</h3>
-                </div>
-
-                <div id="messages-window" class="h-[70vh] overflow-y-auto p-6 space-y-4">
-                    <div class="h-full flex flex-col items-center justify-center text-gray-400">
-                        <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                            </path>
-                        </svg>
-                        <p class="text-lg font-medium">Your Messages</p>
-                        <p class="text-sm">Select a person from the inbox to start chatting.</p>
-                    </div>
-                </div>
-
-                <div id="message-input-area" class="border-t p-3 bg-white">
-                    <form id="send-form" class="flex items-center gap-3">
-                        <input type="text" id="message-input" placeholder="Please select a chat to start typing..."
-                            disabled title="Select a conversation from the sidebar to type a message"
-                            class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all">
-                        <button type="submit" id="send-btn" disabled
-                            class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <a href="rooms.html"
+                class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition text-sm shadow-sm">
+                Find Rooms
+            </a>
         </div>
-    </main>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+
+            <!-- ─── Conversation List ─── -->
+            <div class="lg:w-80 flex-shrink-0">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-gray-100">
+                        <h2 class="font-semibold text-gray-800 text-base">Inbox</h2>
+                    </div>
+                    <div id="conv-list" class="divide-y divide-gray-50">
+                        <!-- Conversations injected here -->
+                        <div class="py-16 text-center text-gray-400 text-sm" id="conv-empty">
+                            <svg class="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            <p class="font-medium">No conversations yet</p>
+                            <p class="mt-1 text-xs">Message a room owner to start.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── Chat Panel ─── -->
+            <div class="flex-1 flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+                style="min-height: 520px;">
+
+                <!-- Placeholder when no conversation is open -->
+                <div id="chat-placeholder" class="flex-1 flex flex-col items-center justify-center text-gray-400">
+                    <svg class="w-14 h-14 mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 4V10a2 2 0 012-2h2M7 4h10a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 4V6a2 2 0 012-2z" />
+                    </svg>
+                    <p class="font-medium">Select a conversation to read and reply</p>
+                </div>
+
+                <!-- Active chat view (hidden until conversation selected) -->
+                <div id="chat-view" class="flex flex-col h-full hidden">
+
+                    <!-- Chat header -->
+                    <div class="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm"
+                            id="chat-avatar">?</div>
+                        <div>
+                            <p class="font-semibold text-gray-900 text-sm" id="chat-name">—</p>
+                            <p class="text-xs text-gray-400" id="chat-room">—</p>
+                        </div>
+                    </div>
+
+                    <!-- Messages thread -->
+                    <div id="chat-thread" class="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-3">
+                        <!-- Messages injected here -->
+                    </div>
+
+                    <!-- Input area -->
+                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-end gap-3">
+                        <textarea id="msg-input" placeholder="Type your message…" rows="2"
+                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-400 outline-none text-sm transition bg-white"></textarea>
+                        <button id="send-btn" onclick="sendReply()"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold text-sm transition shadow-sm flex items-center gap-2 flex-shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <script src="js/auth.js"></script>
     <script src="js/messages.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
-        let currentConversationId = null;
-        let conversations = [];
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) { window.location.href = 'login.html'; }
 
-        document.addEventListener('DOMContentLoaded', init);
+        let activeConvId = null;
 
-        async function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const conversationId = urlParams.get('conversationId');
-            const ownerId = urlParams.get('ownerId');
-            const roomId = urlParams.get('roomId');
+        // ── Load from URL param if coming from rooms page ──
+        const urlParams = new URLSearchParams(window.location.search);
+        const openConvId = urlParams.get('conv');
 
-            await loadConversations();
-
-            if (conversationId) {
-                currentConversationId = parseInt(conversationId);
-                const conv = conversations.find(c => c.id === currentConversationId);
-                if (conv) {
-                    selectConversation(conv.id, conv.other_user_name, conv.room_title);
-                } else {
-                    try {
-                        const newConv = await messages.getConversationById(currentConversationId);
-                        if (newConv) {
-                            const user = JSON.parse(localStorage.getItem('user'));
-                            const otherName = newConv.user1_id === user.id ? newConv.user2_name : newConv.user1_name;
-                            selectConversation(newConv.id, otherName, newConv.room_title);
-                        }
-                    } catch (err) {
-                        console.error("Error loading conversation:", err);
-                        updateInputState(true);
-                        renderMessages(currentConversationId);
-                    }
-                }
-            } else if (ownerId && roomId) {
-                // New flow: handle ownerId and roomId
-                try {
-                    const response = await apiRequest('/conversations/start', {
-                        method: 'POST',
-                        body: JSON.stringify({ receiver_id: ownerId, room_id: roomId })
-                    });
-                    if (response && response.conversationId) {
-                        currentConversationId = response.conversationId;
-                        await loadConversations(); // Refresh list to include new one
-                        const conv = conversations.find(c => c.id === currentConversationId);
-                        if (conv) {
-                            selectConversation(conv.id, conv.other_user_name, conv.room_title);
-                        } else {
-                            // If still not in list, fetch it
-                            const newConv = await messages.getConversationById(currentConversationId);
-                            const user = JSON.parse(localStorage.getItem('user'));
-                            const otherName = newConv.user1_id === user.id ? newConv.user2_name : newConv.user1_name;
-                            selectConversation(newConv.id, otherName, newConv.room_title);
-                        }
-                    }
-                } catch (err) {
-                    console.error("Error starting conversation:", err);
-                    alert("Could not start conversation: " + err.message);
-                }
-            } else {
-                updateInputState(false);
-            }
-        }
-
-        function updateInputState(enabled) {
-            const input = document.getElementById('message-input');
-            const btn = document.getElementById('send-btn');
-            input.disabled = !enabled;
-            btn.disabled = !enabled;
-            input.placeholder = enabled ? "Type a message..." : "Select a chat to start typing...";
-        }
-
+        // ── Load conversations ──
         async function loadConversations() {
             try {
-                conversations = await messages.getConversations();
-                const chatsList = document.getElementById('chats-list');
+                const convs = await messages.getConversations();
+                const list = document.getElementById('conv-list');
+                const empty = document.getElementById('conv-empty');
 
-                if (conversations.length > 0) {
-                    chatsList.innerHTML = conversations.map(c => `
-                        <button onclick="selectConversation(${c.id}, '${c.other_user_name}', '${c.room_title}')" 
-                                class="w-full text-left p-6 hover:bg-blue-50 border-b border-gray-50 transition group ${currentConversationId === c.id ? 'bg-blue-50' : ''}">
-                            <div class="flex justify-between items-start">
-                                <p class="font-bold group-hover:text-blue-600 flex items-center gap-2">
-                                    ${c.other_user_name}
-                                    ${c.unread_count > 0 ? `<span class="w-2 h-2 bg-blue-600 rounded-full"></span>` : ''}
-                                </p>
-                                <span class="text-[10px] text-gray-400">${c.last_message_time ? new Date(c.last_message_time).toLocaleDateString() : ''}</span>
-                            </div>
-                            <p class="text-xs text-blue-500 font-medium truncate mt-1">${c.room_title}</p>
-                            <p class="text-sm ${c.unread_count > 0 ? 'text-gray-900 font-semibold' : 'text-gray-500'} truncate mt-1">${c.last_message || 'No messages yet'}</p>
-                        </button>
-                    `).join('');
-                } else {
-                    // Handled by default HTML if needed, but reinforcing here
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function selectConversation(id, userName, roomTitle) {
-            currentConversationId = id;
-            updateInputState(true);
-
-            document.getElementById('active-chat-name').innerHTML = `
-                <div class="flex flex-col">
-                    <span>${userName}</span>
-                    <span class="text-sm font-normal text-blue-500">${roomTitle}</span>
-                </div>
-            `;
-
-            // Update URL without refreshing
-            const newUrl = `${window.location.pathname}?conversationId=${id}`;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-
-            try {
-                await messages.markRead(id);
-                if (window.checkAuth) window.checkAuth(); // Update navbar badge
-            } catch (err) {
-                console.error("Error marking read:", err);
-            }
-
-            await renderMessages(id);
-            await loadConversations();
-        }
-
-        async function renderMessages(id) {
-            const container = document.getElementById('messages-window');
-            container.innerHTML = '<div class="h-[70vh] flex items-center justify-center text-gray-400"><p>Loading messages...</p></div>';
-
-            try {
-                const chatMessages = await messages.getMessagesByConversation(id);
-                const user = JSON.parse(localStorage.getItem('user'));
-
-                if (chatMessages.length === 0) {
-                    container.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400"><p>No messages yet. Say hello!</p></div>';
+                if (!convs || convs.length === 0) {
+                    empty.style.display = 'block';
                     return;
                 }
+                empty.style.display = 'none';
+                list.innerHTML = '';
 
-                container.innerHTML = chatMessages.map(m => `
-                    <div class="flex ${m.sender_id === user.id ? 'justify-end' : 'justify-start'}">
-                        <div class="max-w-[70%] p-3 rounded-2xl ${m.sender_id === user.id ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-gray-200 text-gray-900 rounded-tl-none'} shadow-sm">
-                            <p class="text-sm">${m.message_text}</p>
-                            <p class="text-[9px] mt-1 opacity-70 ${m.sender_id === user.id ? 'text-right' : 'text-left'}">${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                convs.forEach(c => {
+                    const card = document.createElement('div');
+                    card.id = `conv-${c.id}`;
+                    card.className = 'conv-card px-5 py-4 cursor-pointer hover:bg-gray-50 transition border-l-2 border-transparent';
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-semibold text-sm text-gray-900 truncate">${c.other_user_name || 'User'}</span>
+                            ${c.unread_count > 0 ? `<span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">${c.unread_count}</span>` : ''}
                         </div>
-                    </div>
-                `).join('');
-                container.scrollTop = container.scrollHeight;
-            } catch (err) {
-                container.innerHTML = `<div class="h-full flex items-center justify-center text-red-500"><p>${err.message}</p></div>`;
+                        <p class="text-xs text-blue-500 font-medium mb-1 truncate">📍 ${c.room_title || 'Room'}</p>
+                        <p class="text-xs text-gray-400 truncate">${c.last_message || 'No messages yet'}</p>
+                    `;
+                    card.onclick = () => openConversation(c);
+                    list.appendChild(card);
+                });
+
+                // Auto-open if ?conv= param exists
+                if (openConvId) {
+                    const target = convs.find(c => c.id == openConvId);
+                    if (target) openConversation(target);
+                }
+            } catch (e) {
+                console.error('Failed to load conversations:', e);
             }
         }
 
-        // Handle Enter key for sending
-        document.getElementById('message-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                document.getElementById('send-form').dispatchEvent(new Event('submit'));
-            }
-        });
+        // ── Open a conversation ──
+        async function openConversation(conv) {
+            activeConvId = conv.id;
 
-        document.getElementById('send-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('message-input');
+            // Highlight active card
+            document.querySelectorAll('.conv-card').forEach(el => el.classList.remove('active', 'border-blue-500'));
+            const card = document.getElementById(`conv-${conv.id}`);
+            if (card) { card.classList.add('active', 'border-blue-500'); }
+
+            // Set header
+            const initial = (conv.other_user_name || 'U')[0].toUpperCase();
+            document.getElementById('chat-avatar').textContent = initial;
+            document.getElementById('chat-name').textContent = conv.other_user_name || 'User';
+            document.getElementById('chat-room').textContent = `📍 ${conv.room_title || 'Room'}`;
+
+            // Show chat view
+            document.getElementById('chat-placeholder').classList.add('hidden');
+            document.getElementById('chat-view').classList.remove('hidden');
+
+            // Load messages
+            await fetchMessages(conv.id);
+
+            // Mark as read
+            messages.markRead(conv.id).catch(() => { });
+        }
+
+        // ── Fetch and render messages ──
+        async function fetchMessages(convId) {
+            const thread = document.getElementById('chat-thread');
+            thread.innerHTML = '<p class="text-gray-300 text-xs text-center">Loading…</p>';
+            try {
+                const msgs = await messages.getMessagesByConversation(convId);
+                thread.innerHTML = '';
+                if (!msgs || msgs.length === 0) {
+                    thread.innerHTML = '<p class="text-gray-400 text-xs text-center mt-8">No messages yet. Say hello! 👋</p>';
+                    return;
+                }
+                msgs.forEach(m => renderBubble(m, thread));
+                thread.scrollTop = thread.scrollHeight;
+            } catch (e) {
+                thread.innerHTML = '<p class="text-red-400 text-xs text-center">Could not load messages.</p>';
+            }
+        }
+
+        // ── Render a single message bubble ──
+        function renderBubble(m, thread) {
+            const isMine = m.sender_id === user.id;
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${isMine ? 'justify-end' : 'justify-start'} fade-in`;
+            const time = new Date(m.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            wrapper.innerHTML = `
+                <div class="${isMine ? 'bubble-sent' : 'bubble-received'} px-4 py-2.5 text-sm leading-relaxed">
+                    <p>${escapeHtml(m.message_text)}</p>
+                    <p class="text-xs mt-1 ${isMine ? 'text-blue-200' : 'text-gray-400'} text-right">${time}</p>
+                </div>
+            `;
+            thread.appendChild(wrapper);
+        }
+
+        // ── Send a reply in an open conversation ──
+        async function sendReply() {
+            const input = document.getElementById('msg-input');
             const text = input.value.trim();
-            if (!text || !currentConversationId) return;
+            if (!text || !activeConvId) return;
+
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
 
             try {
-                await messages.sendMessage(currentConversationId, text);
+                const msg = await messages.sendMessage(activeConvId, text);
                 input.value = '';
-                await renderMessages(currentConversationId);
-                await loadConversations();
-            } catch (err) {
-                alert(err.message);
+                btn.disabled = false;
+                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send`;
+
+                const thread = document.getElementById('chat-thread');
+                renderBubble({
+                    sender_id: user.id,
+                    message_text: text,
+                    created_at: new Date().toISOString()
+                }, thread);
+                thread.scrollTop = thread.scrollHeight;
+            } catch (e) {
+                btn.disabled = false;
+                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send`;
+                alert('Failed to send: ' + e.message);
+            }
+        }
+
+        // ── Send on Enter (Shift+Enter for newline) ──
+        document.getElementById('msg-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendReply();
             }
         });
+
+        // ── Helper: escape HTML ──
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadConversations);
     </script>
 </body>
 

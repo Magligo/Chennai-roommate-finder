@@ -44,6 +44,7 @@
 
     <script src="js/auth.js"></script>
     <script src="js/rooms.js"></script>
+    <script src="js/messages.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => loadRooms());
@@ -83,7 +84,13 @@
                                 ${(room.amenities || '').split(',').map(a => `<span class="px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded-md font-medium border border-gray-100">${a.trim()}</span>`).join('')}
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="requestRoom(${room.room_id}, ${room.user_id})" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">Contact / Request</button>
+                                <button onclick="openMessageModal(${room.room_id}, ${room.user_id}, '${room.location.replace(/'/g, "\\'")}')" 
+                                    class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                    </svg>
+                                    Message Owner
+                                </button>
                                 ${user && user.id === room.user_id ? `
                                     <button onclick="deleteRoom(${room.room_id})" class="px-4 bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition border border-red-100">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +106,98 @@
                 grid.innerHTML = `<div class="col-span-full text-center py-20 text-red-500">${err.message}</div>`;
             }
         }
+
+        // ── Message Modal Logic ──
+        let currentRoomId = null;
+        let currentOwnerId = null;
+
+        function openMessageModal(roomId, ownerId, location) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                alert('Please login to message owners.');
+                window.location.href = 'login.html';
+                return;
+            }
+            if (user.id === ownerId) {
+                alert("You can't message yourself!");
+                return;
+            }
+
+            currentRoomId = roomId;
+            currentOwnerId = ownerId;
+
+            document.getElementById('modal-room-name').textContent = location;
+            document.getElementById('message-modal').classList.remove('hidden');
+            document.getElementById('message-modal').classList.add('flex');
+            document.getElementById('initial-msg').focus();
+        }
+
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.add('hidden');
+            document.getElementById('message-modal').classList.remove('flex');
+            document.getElementById('initial-msg').value = '';
+        }
+
+        async function sendInitialMessage() {
+            const text = document.getElementById('initial-msg').value.trim();
+            if (!text) return;
+
+            const btn = document.querySelector('#message-modal button.bg-blue-600');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                // 1. Start/Get conversation
+                const { conversationId } = await apiRequest('/conversations/start', {
+                    method: 'POST',
+                    body: JSON.stringify({ receiver_id: currentOwnerId, room_id: currentRoomId })
+                });
+
+                // 2. Send the message
+                await messages.sendMessage(conversationId, text);
+
+                // 3. Success!
+                alert('Message sent successfully!');
+                window.location.href = `messages.html?conv=${conversationId}`;
+            } catch (err) {
+                alert('Error: ' + err.message);
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
+            }
+        }
     </script>
-</body>
+
+    <!-- Message Modal HTML -->
+    <div id="message-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
+        <div
+            class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <div>
+                    <h3 class="font-bold text-gray-900">Message Owner</h3>
+                    <p class="text-xs text-blue-600 font-medium" id="modal-room-name"></p>
+                </div>
+                <button onclick="closeMessageModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
+                <textarea id="initial-msg" rows="4"
+                    placeholder="Hi, I'm interested in this room! Is it still available?"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none text-sm"></textarea>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="closeMessageModal()"
+                        class="flex-1 px-4 py-3 border border-gray-200 rounded-xl font-bold text-gray-600 hover:bg-gray-50 transition">Cancel</button>
+                    <button onclick="sendInitialMessage()"
+                        class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200">Send
+                        Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </html>
