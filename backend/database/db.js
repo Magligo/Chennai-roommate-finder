@@ -91,14 +91,14 @@ function initializeDatabase() {
             FOREIGN KEY (conversation_id) REFERENCES conversations (id),
             FOREIGN KEY (sender_id) REFERENCES users (id),
             FOREIGN KEY (receiver_id) REFERENCES users (id)
-        )`, () => {
-            // Safe migrations: Try adding columns if the table already existed from an older version
-            db.run(`ALTER TABLE messages ADD COLUMN receiver_id INTEGER`, (err) => {
-                // Ignore error if column already exists
-            });
-            db.run(`ALTER TABLE messages ADD COLUMN is_read INTEGER DEFAULT 0`, (err) => {
-                // Ignore error if column already exists
-            });
+        )`, (err) => {
+            if (err) {
+                console.error('Error creating messages table:', err.message);
+                return;
+            }
+            // Safe migrations for existing DBs that were created without these columns
+            db.run(`ALTER TABLE messages ADD COLUMN receiver_id INTEGER`, () => { });
+            db.run(`ALTER TABLE messages ADD COLUMN is_read INTEGER DEFAULT 0`, () => { });
         });
     });
 }

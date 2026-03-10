@@ -18,6 +18,14 @@ const apiRequest = async (endpoint, options = {}) => {
 
     const data = await response.json();
     if (!response.ok) {
+        // If token is invalid or expired, clear session and redirect to login
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Your session has expired. Please log in again.');
+            window.location.href = 'login.html';
+            return;
+        }
         throw new Error(data.message || 'Something went wrong');
     }
     return data;

@@ -186,6 +186,11 @@
 
                 if (!convs || convs.length === 0) {
                     empty.style.display = 'block';
+                    // If a conv param exists but inbox is empty, show helpful message
+                    if (openConvId) {
+                        empty.querySelector('p.font-medium').textContent = 'Conversation not found';
+                        empty.querySelector('p.mt-1').textContent = 'Try sending a message from the rooms page.';
+                    }
                     return;
                 }
                 empty.style.display = 'none';
@@ -210,10 +215,25 @@
                 // Auto-open if ?conv= param exists
                 if (openConvId) {
                     const target = convs.find(c => c.id == openConvId);
-                    if (target) openConversation(target);
+                    if (target) {
+                        openConversation(target);
+                    } else {
+                        console.warn('Conversation', openConvId, 'not found in list');
+                    }
                 }
             } catch (e) {
                 console.error('Failed to load conversations:', e);
+                // Show error in the UI
+                const empty = document.getElementById('conv-empty');
+                empty.style.display = 'block';
+                empty.innerHTML = `
+                    <div class="py-10 text-center text-red-400 text-sm px-4">
+                        <p class="font-semibold mb-1">⚠️ Could not load conversations</p>
+                        <p class="text-xs text-gray-400">${e.message && e.message.toLowerCase().includes('failed to fetch')
+                        ? 'Backend server is not running. Start the server on port 5000.'
+                        : e.message || 'Unknown error. Check browser console.'}
+                        </p>
+                    </div>`;
             }
         }
 

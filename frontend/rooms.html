@@ -140,27 +140,52 @@
 
         async function sendInitialMessage() {
             const text = document.getElementById('initial-msg').value.trim();
-            if (!text) return;
+            if (!text) {
+                alert('Please type a message first.');
+                return;
+            }
 
             const btn = document.querySelector('#message-modal button.bg-blue-600');
             btn.disabled = true;
             btn.textContent = 'Sending...';
 
             try {
+                // Check user is still logged in
+                const user = JSON.parse(localStorage.getItem('user'));
+                const token = localStorage.getItem('token');
+                if (!user || !token) {
+                    alert('Your session has expired. Please log in again.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                console.log('Starting conversation with owner:', currentOwnerId, 'for room:', currentRoomId);
+
                 // 1. Start/Get conversation
-                const { conversationId } = await apiRequest('/conversations/start', {
+                const result = await apiRequest('/conversations/start', {
                     method: 'POST',
                     body: JSON.stringify({ receiver_id: currentOwnerId, room_id: currentRoomId })
                 });
 
+                console.log('Conversation started:', result);
+                const conversationId = result.conversationId;
+
                 // 2. Send the message
                 await messages.sendMessage(conversationId, text);
+                console.log('Message sent to conversation:', conversationId);
 
-                // 3. Success!
-                alert('Message sent successfully!');
+                // 3. Success – redirect to messages
                 window.location.href = `messages.html?conv=${conversationId}`;
             } catch (err) {
-                alert('Error: ' + err.message);
+                console.error('Send message error:', err);
+                if (err.message && err.message.includes('401')) {
+                    alert('You are not logged in. Please log in and try again.');
+                    window.location.href = 'login.html';
+                } else if (err.message && err.message.toLowerCase().includes('failed to fetch')) {
+                    alert('Cannot reach the server. Make sure the backend is running on port 5000.');
+                } else {
+                    alert('Error sending message: ' + err.message);
+                }
                 btn.disabled = false;
                 btn.textContent = 'Send Message';
             }

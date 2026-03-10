@@ -24,7 +24,10 @@ exports.sendMessage = (req, res) => {
         const receiver_id = (conv.user1_id === sender_id) ? conv.user2_id : conv.user1_id;
 
         Message.create({ conversation_id, sender_id, receiver_id, message_text }, function (err) {
-            if (err) return res.status(500).json({ message: 'Error sending message', error: err.message });
+            if (err) {
+                console.error('DB Error inserting message:', err.message);
+                return res.status(500).json({ message: 'DB Error: ' + err.message });
+            }
             res.status(201).json({
                 id: this.lastID,
                 conversation_id,
