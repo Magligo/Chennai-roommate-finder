@@ -4,88 +4,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Chennai Roommate Finder</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dashboard | ChennaiRooms</title>
+    <link rel="stylesheet" href="css/glow.css">
+    <style>
+        .page-wrap {
+            padding: 90px 0 60px;
+        }
+
+        .dash-header {
+            margin-bottom: 2rem;
+        }
+
+        .dash-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .dash-title span {
+            background: linear-gradient(135deg, var(--purple-l), var(--cyan-l));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stat Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(12px);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-num {
+            font-size: 2.25rem;
+            font-weight: 800;
+        }
+
+        .stat-purple {
+            color: var(--purple-l);
+            text-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+        }
+
+        .stat-cyan {
+            color: var(--cyan-l);
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .stat-pink {
+            color: var(--pink-l);
+            text-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Main grid */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dash-panel {
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--white);
+            background: rgba(124, 58, 237, 0.07);
+        }
+
+        .panel-body {
+            padding: 1.25rem;
+        }
+
+        /* Requests */
+        .req-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .req-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--white);
+        }
+
+        .req-loc {
+            font-size: 0.775rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        /* Quick Links */
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            border-radius: 0.875rem;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .quick-link:hover {
+            background: rgba(124, 58, 237, 0.08);
+            border-color: var(--border);
+        }
+
+        .quick-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .qi-purple {
+            background: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.25);
+        }
+
+        .qi-cyan {
+            background: rgba(6, 182, 212, 0.15);
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.2);
+        }
+
+        .qi-pink {
+            background: rgba(236, 72, 153, 0.15);
+            box-shadow: 0 0 16px rgba(236, 72, 153, 0.2);
+        }
+
+        .quick-link-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--white);
+        }
+
+        .quick-link-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-    <nav class="fixed w-full z-50 bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="index.html"
-                    class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChennaiRooms</a>
-                <div class="flex space-x-6 items-center" id="nav-links"></div>
-            </div>
+<body>
+    <nav class="glow-nav">
+        <div class="glow-nav-inner">
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
+            <div class="nav-links" id="nav-links"></div>
         </div>
     </nav>
 
-    <main class="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-10">
-            <h1 class="text-3xl font-bold text-gray-900" id="welcome-text">Welcome back!</h1>
-            <p class="text-gray-500 mt-2">Here's what's happening with your roommate search.</p>
-        </div>
+    <div class="page-wrap">
+        <div class="content-wrap">
+            <div class="dash-header">
+                <h1 class="dash-title">Welcome back, <span id="welcome-name">User</span>! 👋</h1>
+                <p class="text-muted" style="margin-top:0.4rem;">Here's what's happening with your roommate search.</p>
+            </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-            <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                <p class="text-sm font-medium text-gray-500 mb-1">Incoming Requests</p>
-                <h3 class="text-3xl font-bold" id="req-count">0</h3>
-            </div>
-            <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                <p class="text-sm font-medium text-gray-500 mb-1">Messages</p>
-                <h3 class="text-3xl font-bold" id="msg-count">0</h3>
-            </div>
-            <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                <p class="text-sm font-medium text-gray-500 mb-1">Your Posts</p>
-                <h3 class="text-3xl font-bold" id="post-count">0</h3>
-            </div>
-            <div
-                class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm text-center flex flex-col justify-center">
-                <a href="post-room.html"
-                    class="bg-blue-600 text-white py-2 px-4 rounded-xl font-bold hover:bg-blue-700 transition">Post New
-                    Room</a>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-gray-50 flex justify-between items-center">
-                    <h2 class="text-xl font-bold">Recent Requests</h2>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">🔔 Incoming Requests</div>
+                    <div class="stat-num stat-purple" id="req-count">0</div>
                 </div>
-                <div class="p-6" id="requests-list">
-                    <p class="text-gray-500 text-center py-8">No requests found.</p>
+                <div class="stat-card">
+                    <div class="stat-label">💬 Conversations</div>
+                    <div class="stat-num stat-cyan" id="msg-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🏠 Your Posts</div>
+                    <div class="stat-num stat-pink" id="post-count">0</div>
+                </div>
+                <div class="stat-card" style="justify-content:center;align-items:flex-start;">
+                    <div class="stat-label" style="margin-bottom:0.75rem;">➕ New Post</div>
+                    <a href="post-room.html" class="btn-glow-purple"
+                        style="padding:0.55rem 1.1rem;font-size:0.85rem;">Post a Room</a>
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-gray-50 flex justify-between items-center">
-                    <h2 class="text-xl font-bold">Quick Actions</h2>
+            <div class="dash-grid">
+                <div class="dash-panel">
+                    <div class="panel-head">📋 Recent Requests</div>
+                    <div class="panel-body" id="requests-list">
+                        <p style="color:var(--text-muted);text-align:center;padding:2rem 0;font-size:0.875rem;">No
+                            requests found.</p>
+                    </div>
                 </div>
-                <div class="p-6 space-y-4">
-                    <a href="rooms.html"
-                        class="flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-blue-50 transition border border-transparent hover:border-blue-100 group">
-                        <div
-                            class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4 text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition">
-                            🔍</div>
-                        <div>
-                            <p class="font-bold">Find Rooms</p>
-                            <p class="text-sm text-gray-500">Search for available rooms in Chennai</p>
-                        </div>
-                    </a>
-                    <a href="messages.html"
-                        class="flex items-center p-4 rounded-2xl bg-gray-50 hover:bg-purple-50 transition border border-transparent hover:border-purple-100 group">
-                        <div
-                            class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mr-4 text-purple-600 font-bold group-hover:bg-purple-600 group-hover:text-white transition">
-                            💬</div>
-                        <div>
-                            <p class="font-bold">Check Messages</p>
-                            <p class="text-sm text-gray-500">Contact potential roommates</p>
-                        </div>
-                    </a>
+
+                <div class="dash-panel">
+                    <div class="panel-head">⚡ Quick Actions</div>
+                    <div class="panel-body">
+                        <a href="rooms.html" class="quick-link">
+                            <div class="quick-icon qi-purple">🔍</div>
+                            <div>
+                                <div class="quick-link-title">Find Rooms</div>
+                                <div class="quick-link-sub">Search available rooms in Chennai</div>
+                            </div>
+                        </a>
+                        <a href="messages.html" class="quick-link">
+                            <div class="quick-icon qi-cyan">💬</div>
+                            <div>
+                                <div class="quick-link-title">Check Messages</div>
+                                <div class="quick-link-sub">Contact potential roommates</div>
+                            </div>
+                        </a>
+                        <a href="post-room.html" class="quick-link">
+                            <div class="quick-icon qi-pink">🏠</div>
+                            <div>
+                                <div class="quick-link-title">Post Your Room</div>
+                                <div class="quick-link-sub">Let others find your listing</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script src="js/auth.js"></script>
     <script src="js/rooms.js"></script>
@@ -94,19 +277,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            document.getElementById('welcome-text').textContent = `Welcome back, ${user.name}!`;
-
+            if (!user) { window.location.href = 'login.html'; return; }
+            document.getElementById('welcome-name').textContent = user.name;
             try {
                 const reqs = await requests.getRequests();
                 const convos = await messages.getConversations();
                 const allRooms = await rooms.getAll();
                 const userRooms = allRooms.filter(r => r.user_id === user.id);
-
                 document.getElementById('req-count').textContent = reqs.filter(r => r.owner_id === user.id && r.status === 'pending').length;
                 document.getElementById('msg-count').textContent = convos.length;
                 document.getElementById('post-count').textContent = userRooms.length;
@@ -115,32 +292,25 @@
                 const userRequests = reqs.filter(r => r.owner_id === user.id).slice(0, 5);
                 if (userRequests.length > 0) {
                     reqList.innerHTML = userRequests.map(r => `
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl mb-3">
+                        <div class="req-item">
                             <div>
-                                <p class="font-bold">${r.requester_name}</p>
-                                <p class="text-sm text-gray-500">Room in ${r.location}</p>
+                                <div class="req-name">${r.requester_name}</div>
+                                <div class="req-loc">📍 ${r.location}</div>
                             </div>
-                            <div class="flex gap-2">
+                            <div style="display:flex;gap:0.5rem;">
                                 ${r.status === 'pending' ? `
-                                    <button onclick="updateReq(${r.id}, 'accepted')" class="bg-green-100 text-green-600 px-3 py-1 rounded-lg text-sm font-bold">Accept</button>
-                                    <button onclick="updateReq(${r.id}, 'rejected')" class="bg-red-100 text-red-600 px-3 py-1 rounded-lg text-sm font-bold">Reject</button>
-                                ` : `<span class="text-sm font-bold capitalize text-gray-500">${r.status}</span>`}
+                                    <button onclick="updateReq(${r.id},'accepted')" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:0.3rem 0.8rem;border-radius:0.5rem;font-size:0.8rem;font-weight:700;cursor:pointer;">Accept</button>
+                                    <button onclick="updateReq(${r.id},'rejected')" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:0.3rem 0.8rem;border-radius:0.5rem;font-size:0.8rem;font-weight:700;cursor:pointer;">Reject</button>
+                                ` : `<span style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:capitalize;">${r.status}</span>`}
                             </div>
                         </div>
                     `).join('');
                 }
-            } catch (err) {
-                console.error('Error loading dashboard:', err);
-            }
+            } catch (err) { console.error('Error loading dashboard:', err); }
         });
-
         async function updateReq(id, status) {
-            try {
-                await requests.updateRequest(id, status);
-                location.reload();
-            } catch (err) {
-                alert(err.message);
-            }
+            try { await requests.updateRequest(id, status); location.reload(); }
+            catch (err) { alert(err.message); }
         }
     </script>
 </body>

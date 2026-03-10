@@ -4,47 +4,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Chennai Roommate Finder</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Login | ChennaiRooms</title>
+    <link rel="stylesheet" href="css/glow.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 1.75rem;
+            padding: 2.5rem;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 80px rgba(124, 58, 237, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-top: 0.75rem;
+        }
+
+        .auth-sub {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .error-box {
+            display: none;
+            padding: 0.85rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.875rem;
+            color: #f87171;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--purple-l);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-        <div class="p-8">
-            <div class="text-center mb-10">
-                <a href="index.html"
-                    class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChennaiRooms</a>
-                <h2 class="text-3xl font-extrabold text-gray-900 mt-4">Welcome Back</h2>
-                <p class="text-gray-500 mt-2">Login to find your perfect roommate</p>
-            </div>
-
-            <div id="error-msg" class="hidden mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
-            </div>
-
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                    <input type="email" id="email" required
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none"
-                        placeholder="name@example.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" required
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none"
-                        placeholder="••••••••">
-                </div>
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100">Sign
-                    In</button>
-            </form>
-
-            <p class="text-center text-gray-600 mt-8">
-                Don't have an account? <a href="signup.html" class="text-blue-600 font-bold hover:underline">Create
-                    Account</a>
-            </p>
+<body>
+    <div class="auth-card fade-in-up">
+        <div class="auth-header">
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-sub">Sign in to find your perfect roommate</p>
         </div>
+
+        <div id="error-msg" class="error-box"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label class="glow-label">Email Address</label>
+                <input type="email" id="email" required class="glow-input" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+                <label class="glow-label">Password</label>
+                <input type="password" id="password" required class="glow-input" placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-glow-purple" style="width:100%;margin-top:0.75rem;">Sign In 🔑</button>
+        </form>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-text">New here?</div>
+            <div class="divider-line"></div>
+        </div>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="signup.html">Create Account →</a>
+        </p>
     </div>
 
     <script src="js/auth.js"></script>
@@ -54,7 +137,6 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
-
             try {
                 const response = await auth.login({ email, password });
                 localStorage.setItem('token', response.token);
@@ -62,7 +144,7 @@
                 window.location.href = 'dashboard.html';
             } catch (err) {
                 errorMsg.textContent = err.message;
-                errorMsg.classList.remove('hidden');
+                errorMsg.style.display = 'block';
             }
         });
     </script>

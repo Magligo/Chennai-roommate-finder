@@ -5,125 +5,316 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chennai Roommate Finder | Find Your Perfect Room</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/glow.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* Hero */
+        .hero {
+            padding: 140px 0 100px;
+            text-align: center;
+            position: relative;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+        .hero-title span {
+            background: linear-gradient(135deg, #a855f7, #22d3ee, #f472b6);
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 350px;
+            height: 350px;
+            background: rgba(124, 58, 237, 0.2);
+            top: -80px;
+            right: -80px;
+        }
+
+        .orb-2 {
+            width: 280px;
+            height: 280px;
+            background: rgba(6, 182, 212, 0.15);
+            bottom: -60px;
+            left: -60px;
+            animation-delay: 2s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: rgba(236, 72, 153, 0.12);
+            top: 50%;
+            left: 60%;
+            animation-delay: 4s;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin: 3rem 0 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple-l), var(--cyan-l));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* Features */
+        .features-section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cyan-l);
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            background: rgba(15, 15, 35, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            backdrop-filter: blur(12px);
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(124, 58, 237, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(124, 58, 237, 0.12);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .fi-purple {
+            background: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .fi-cyan {
+            background: rgba(6, 182, 212, 0.15);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+        }
+
+        .fi-pink {
+            background: rgba(236, 72, 153, 0.15);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.25);
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.3));
+            border-radius: 2rem;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.875rem;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900">
-    <nav class="fixed w-full z-50 glass border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <span class="text-2xl font-bold gradient-text">ChennaiRooms</span>
-                </div>
-                <div class="hidden md:flex space-x-8 items-center" id="nav-links">
-                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
-                    <a href="rooms.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Find Room</a>
-                    <a href="login.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Login</a>
-                    <a href="signup.html"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition shadow-lg shadow-blue-200">Sign
-                        Up</a>
-                </div>
+<body>
+    <nav class="glow-nav">
+        <div class="glow-nav-inner">
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="rooms.html" class="nav-link">Find Room</a>
             </div>
         </div>
     </nav>
 
-    <header class="relative pt-32 pb-20 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-                    Find your next home in <span class="gradient-text">Chennai</span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-10 leading-relaxed">
-                    Connecting roommates and room seekers across Chennai. Simple, secure, and smart matching for your
-                    perfect living space.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="rooms.html"
-                        class="bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition shadow-xl shadow-blue-200">Browse
-                        Roommate Needs</a>
-                    <a href="signup.html"
-                        class="bg-white text-gray-900 border border-gray-200 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition">Post
-                        Your Room</a>
-                </div>
+    <section class="hero" style="position:relative;overflow:hidden;">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="content-wrap">
+            <div class="badge-cyan" style="display:inline-block;margin-bottom:1.5rem;">🏙️ Chennai's #1 Roommate
+                Platform</div>
+            <h1 class="hero-title">
+                Find Your Perfect<br><span>Home in Chennai</span>
+            </h1>
+            <p class="hero-sub">
+                Connecting roommates and room seekers across Chennai. Simple, secure, and smart matching for your
+                perfect living space.
+            </p>
+            <div class="hero-btns">
+                <a href="rooms.html" class="btn-glow-purple">
+                    🏠 Browse Rooms
+                </a>
+                <a href="signup.html" class="btn-outline">Post Your Room →</a>
             </div>
-        </div>
-        <div
-            class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50">
-        </div>
-        <div
-            class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-50">
-        </div>
-    </header>
-
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Why choose ChennaiRooms?</h2>
-                <p class="text-gray-600">We make finding roommates easier than ever.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Smart Filters</h3>
-                    <p class="text-gray-600">Filter by location, budget, and roommate preferences to find your ideal
-                        match.</p>
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-num">500+</div>
+                    <div class="stat-label">Rooms Listed</div>
                 </div>
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Direct Messaging</h3>
-                    <p class="text-gray-600">Chat directly with potential roommates and owners through our secure
-                        platform.</p>
+                <div class="stat">
+                    <div class="stat-num">1.2K+</div>
+                    <div class="stat-label">Happy Users</div>
                 </div>
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.040L3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622l-0.382-3.040z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Verified Profiles</h3>
-                    <p class="text-gray-600">Browse through detailed profiles with occupation and preferences listed.
-                    </p>
+                <div class="stat">
+                    <div class="stat-num">20+</div>
+                    <div class="stat-label">Locations</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-lg font-bold mb-4">ChennaiRoommateFinder</p>
-            <p class="text-gray-400">&copy; 2026 Chennai Roommate Finder. All rights reserved.</p>
+    <section class="features-section">
+        <div class="content-wrap">
+            <div style="text-align:center;">
+                <span class="section-label">✦ Why Choose Us</span>
+                <h2 class="glow-title">Everything you need</h2>
+                <p class="glow-subtitle">We make finding roommates easier than ever before.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon fi-purple">🔍</div>
+                    <h3 class="feature-title">Smart Filters</h3>
+                    <p class="feature-desc">Filter by location, budget, and roommate preferences to find your ideal
+                        match instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon fi-cyan">💬</div>
+                    <h3 class="feature-title">Direct Messaging</h3>
+                    <p class="feature-desc">Chat directly with potential roommates and owners through our secure
+                        real-time platform.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon fi-pink">✅</div>
+                    <h3 class="feature-title">Verified Profiles</h3>
+                    <p class="feature-desc">Browse detailed profiles with occupation and preferences for safe, informed
+                        decisions.</p>
+                </div>
+            </div>
         </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="content-wrap">
+            <div class="cta-box">
+                <h2 style="font-size:2rem;font-weight:800;margin-bottom:1rem;">Ready to find your roommate?</h2>
+                <p style="color:var(--text-muted);margin-bottom:2rem;">Join thousands of Chennai residents who found
+                    their perfect living space.</p>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                    <a href="signup.html" class="btn-glow-purple">Get Started Free 🚀</a>
+                    <a href="login.html" class="btn-glow-cyan">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p style="font-size:1rem;font-weight:700;margin-bottom:0.4rem;" class="glow-logo"
+            style="-webkit-text-fill-color:unset;">⚡ ChennaiRooms</p>
+        <p>© 2026 Chennai Roommate Finder. All rights reserved.</p>
     </footer>
 
     <script src="js/auth.js"></script>

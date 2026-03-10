@@ -4,163 +4,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages | Chennai Roommate Finder</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Messages | ChennaiRooms</title>
+    <link rel="stylesheet" href="css/glow.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        .messages-layout {
+            padding: 90px 0 40px;
+            min-height: 100vh;
         }
 
-        /* Chat bubble styles */
-        .bubble-sent {
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
+        .messages-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+        }
+
+        .chat-container {
+            display: flex;
+            gap: 1.25rem;
+            height: calc(100vh - 200px);
+            min-height: 520px;
+        }
+
+        /* Sidebar */
+        .conv-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-head {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--white);
+            background: rgba(124, 58, 237, 0.08);
+        }
+
+        .conv-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conv-item {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .conv-item:hover {
+            background: rgba(124, 58, 237, 0.08);
+        }
+
+        .conv-item.active {
+            background: rgba(124, 58, 237, 0.14);
+            border-left-color: var(--purple-l);
+        }
+
+        .conv-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--white);
+        }
+
+        .conv-room {
+            font-size: 0.75rem;
+            color: var(--cyan-l);
+            margin-top: 0.2rem;
+        }
+
+        .conv-preview {
+            font-size: 0.775rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conv-badge {
+            background: var(--purple);
             color: #fff;
-            border-radius: 18px 18px 4px 18px;
-            max-width: 72%;
-            align-self: flex-end;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.1rem 0.5rem;
+            border-radius: 50px;
         }
 
-        .bubble-received {
-            background: #f3f4f6;
-            color: #111827;
-            border-radius: 18px 18px 18px 4px;
-            max-width: 72%;
-            align-self: flex-start;
+        .conv-empty {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
         }
 
-        /* Thread container scroll */
-        #chat-thread {
+        .conv-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.4;
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+        }
+
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            gap: 0.75rem;
+        }
+
+        .chat-placeholder-icon {
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        .chat-view {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-head {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            background: rgba(124, 58, 237, 0.07);
+        }
+
+        .chat-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.5);
+        }
+
+        .chat-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--white);
+        }
+
+        .chat-room-label {
+            font-size: 0.75rem;
+            color: var(--cyan-l);
+        }
+
+        .chat-thread {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
             scroll-behavior: smooth;
         }
 
-        /* Conversation card active state */
-        .conv-card.active {
-            background: #eff6ff;
-            border-color: #3b82f6;
+        .bubble-sent {
+            align-self: flex-end;
+            max-width: 72%;
+            background: linear-gradient(135deg, var(--purple), #6d28d9);
+            color: #fff;
+            border-radius: 18px 18px 4px 18px;
+            padding: 0.65rem 1rem;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
         }
 
-        /* Textarea auto-resize feel */
-        #msg-input {
+        .bubble-recv {
+            align-self: flex-start;
+            max-width: 72%;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text);
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid var(--border);
+            padding: 0.65rem 1rem;
+        }
+
+        .bubble-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .bubble-time {
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+
+        .bubble-sent .bubble-time {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .bubble-recv .bubble-time {
+            color: var(--text-muted);
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 10, 20, 0.6);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .chat-input-area textarea {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 0.875rem;
+            color: var(--text);
+            font-size: 0.875rem;
             resize: none;
+            outline: none;
             max-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Fade-in animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .chat-input-area textarea::placeholder {
+            color: var(--text-muted);
         }
 
-        .fade-in {
-            animation: fadeInUp 0.25s ease;
+        .chat-input-area textarea:focus {
+            border-color: var(--purple-l);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="index.html"
-                    class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChennaiRooms</a>
-                <div class="flex space-x-6 items-center" id="nav-links"></div>
-            </div>
+<body>
+    <nav class="glow-nav">
+        <div class="glow-nav-inner">
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
+            <div class="nav-links" id="nav-links"></div>
         </div>
     </nav>
 
-    <div class="pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <div class="mb-8 flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Messages</h1>
-                <p class="text-gray-500 mt-1">Your direct conversations with room owners and seekers.</p>
+    <div class="messages-layout">
+        <div class="content-wrap">
+            <div class="messages-header">
+                <div>
+                    <h1 class="glow-title" style="font-size:1.9rem;">💬 Messages</h1>
+                    <p class="glow-subtitle" style="font-size:0.9rem;">Your direct conversations with room owners and
+                        seekers.</p>
+                </div>
+                <a href="rooms.html" class="btn-glow-purple" style="padding:0.6rem 1.2rem;">🏠 Find Rooms</a>
             </div>
-            <a href="rooms.html"
-                class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition text-sm shadow-sm">
-                Find Rooms
-            </a>
-        </div>
 
-        <div class="flex flex-col lg:flex-row gap-6">
-
-            <!-- ─── Conversation List ─── -->
-            <div class="lg:w-80 flex-shrink-0">
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div class="px-5 py-4 border-b border-gray-100">
-                        <h2 class="font-semibold text-gray-800 text-base">Inbox</h2>
+            <div class="chat-container">
+                <!-- Sidebar -->
+                <div class="conv-sidebar">
+                    <div class="sidebar-head">📬 Inbox</div>
+                    <div class="conv-list" id="conv-list">
+                        <div class="conv-empty" id="conv-empty">
+                            <div class="conv-empty-icon">💬</div>
+                            <p style="font-weight:600;color:var(--text);">No conversations yet</p>
+                            <p style="margin-top:0.3rem;">Message a room owner to start.</p>
+                        </div>
                     </div>
-                    <div id="conv-list" class="divide-y divide-gray-50">
-                        <!-- Conversations injected here -->
-                        <div class="py-16 text-center text-gray-400 text-sm" id="conv-empty">
-                            <svg class="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                            </svg>
-                            <p class="font-medium">No conversations yet</p>
-                            <p class="mt-1 text-xs">Message a room owner to start.</p>
+                </div>
+
+                <!-- Chat Panel -->
+                <div class="chat-panel">
+                    <div class="chat-placeholder" id="chat-placeholder">
+                        <div class="chat-placeholder-icon">🗨️</div>
+                        <p style="font-weight:600;color:var(--text);">Select a conversation</p>
+                        <p style="font-size:0.85rem;">to read and reply</p>
+                    </div>
+                    <div class="chat-view" id="chat-view">
+                        <div class="chat-head">
+                            <div class="chat-avatar" id="chat-avatar">?</div>
+                            <div>
+                                <div class="chat-name" id="chat-name">—</div>
+                                <div class="chat-room-label" id="chat-room">—</div>
+                            </div>
+                        </div>
+                        <div class="chat-thread" id="chat-thread"></div>
+                        <div class="chat-input-area">
+                            <textarea id="msg-input" rows="2" placeholder="Type your message…"></textarea>
+                            <button id="send-btn" onclick="sendReply()" class="btn-glow-purple"
+                                style="padding:0.75rem 1.25rem;flex-shrink:0;">✈️ Send</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- ─── Chat Panel ─── -->
-            <div class="flex-1 flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
-                style="min-height: 520px;">
-
-                <!-- Placeholder when no conversation is open -->
-                <div id="chat-placeholder" class="flex-1 flex flex-col items-center justify-center text-gray-400">
-                    <svg class="w-14 h-14 mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 4V10a2 2 0 012-2h2M7 4h10a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 4V6a2 2 0 012-2z" />
-                    </svg>
-                    <p class="font-medium">Select a conversation to read and reply</p>
-                </div>
-
-                <!-- Active chat view (hidden until conversation selected) -->
-                <div id="chat-view" class="flex flex-col h-full hidden">
-
-                    <!-- Chat header -->
-                    <div class="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm"
-                            id="chat-avatar">?</div>
-                        <div>
-                            <p class="font-semibold text-gray-900 text-sm" id="chat-name">—</p>
-                            <p class="text-xs text-gray-400" id="chat-room">—</p>
-                        </div>
-                    </div>
-
-                    <!-- Messages thread -->
-                    <div id="chat-thread" class="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-3">
-                        <!-- Messages injected here -->
-                    </div>
-
-                    <!-- Input area -->
-                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-end gap-3">
-                        <textarea id="msg-input" placeholder="Type your message…" rows="2"
-                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-400 outline-none text-sm transition bg-white"></textarea>
-                        <button id="send-btn" onclick="sendReply()"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold text-sm transition shadow-sm flex items-center gap-2 flex-shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                            Send
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -172,169 +329,120 @@
         if (!user) { window.location.href = 'login.html'; }
 
         let activeConvId = null;
-
-        // ── Load from URL param if coming from rooms page ──
         const urlParams = new URLSearchParams(window.location.search);
         const openConvId = urlParams.get('conv');
 
-        // ── Load conversations ──
         async function loadConversations() {
             try {
                 const convs = await messages.getConversations();
                 const list = document.getElementById('conv-list');
                 const empty = document.getElementById('conv-empty');
-
                 if (!convs || convs.length === 0) {
                     empty.style.display = 'block';
-                    // If a conv param exists but inbox is empty, show helpful message
                     if (openConvId) {
-                        empty.querySelector('p.font-medium').textContent = 'Conversation not found';
-                        empty.querySelector('p.mt-1').textContent = 'Try sending a message from the rooms page.';
+                        empty.querySelector('p:first-of-type').textContent = 'Conversation not found';
                     }
                     return;
                 }
                 empty.style.display = 'none';
                 list.innerHTML = '';
-
                 convs.forEach(c => {
                     const card = document.createElement('div');
                     card.id = `conv-${c.id}`;
-                    card.className = 'conv-card px-5 py-4 cursor-pointer hover:bg-gray-50 transition border-l-2 border-transparent';
+                    card.className = 'conv-item';
                     card.innerHTML = `
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-semibold text-sm text-gray-900 truncate">${c.other_user_name || 'User'}</span>
-                            ${c.unread_count > 0 ? `<span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">${c.unread_count}</span>` : ''}
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.2rem;">
+                            <span class="conv-name">${c.other_user_name || 'User'}</span>
+                            ${c.unread_count > 0 ? `<span class="conv-badge">${c.unread_count}</span>` : ''}
                         </div>
-                        <p class="text-xs text-blue-500 font-medium mb-1 truncate">📍 ${c.room_title || 'Room'}</p>
-                        <p class="text-xs text-gray-400 truncate">${c.last_message || 'No messages yet'}</p>
+                        <div class="conv-room">📍 ${c.room_title || 'Room'}</div>
+                        <div class="conv-preview">${c.last_message || 'No messages yet'}</div>
                     `;
                     card.onclick = () => openConversation(c);
                     list.appendChild(card);
                 });
-
-                // Auto-open if ?conv= param exists
                 if (openConvId) {
                     const target = convs.find(c => c.id == openConvId);
-                    if (target) {
-                        openConversation(target);
-                    } else {
-                        console.warn('Conversation', openConvId, 'not found in list');
-                    }
+                    if (target) openConversation(target);
                 }
             } catch (e) {
                 console.error('Failed to load conversations:', e);
-                // Show error in the UI
                 const empty = document.getElementById('conv-empty');
                 empty.style.display = 'block';
-                empty.innerHTML = `
-                    <div class="py-10 text-center text-red-400 text-sm px-4">
-                        <p class="font-semibold mb-1">⚠️ Could not load conversations</p>
-                        <p class="text-xs text-gray-400">${e.message && e.message.toLowerCase().includes('failed to fetch')
-                        ? 'Backend server is not running. Start the server on port 5000.'
-                        : e.message || 'Unknown error. Check browser console.'}
-                        </p>
-                    </div>`;
+                empty.innerHTML = `<div class="conv-empty"><div class="conv-empty-icon">⚠️</div><p style="color:#f87171;font-weight:600;">Could not load</p><p>${e.message && e.message.toLowerCase().includes('failed to fetch') ? 'Backend not running on port 5000.' : e.message}</p></div>`;
             }
         }
 
-        // ── Open a conversation ──
         async function openConversation(conv) {
             activeConvId = conv.id;
-
-            // Highlight active card
-            document.querySelectorAll('.conv-card').forEach(el => el.classList.remove('active', 'border-blue-500'));
+            document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
             const card = document.getElementById(`conv-${conv.id}`);
-            if (card) { card.classList.add('active', 'border-blue-500'); }
-
-            // Set header
-            const initial = (conv.other_user_name || 'U')[0].toUpperCase();
-            document.getElementById('chat-avatar').textContent = initial;
+            if (card) card.classList.add('active');
+            document.getElementById('chat-avatar').textContent = (conv.other_user_name || 'U')[0].toUpperCase();
             document.getElementById('chat-name').textContent = conv.other_user_name || 'User';
             document.getElementById('chat-room').textContent = `📍 ${conv.room_title || 'Room'}`;
-
-            // Show chat view
-            document.getElementById('chat-placeholder').classList.add('hidden');
-            document.getElementById('chat-view').classList.remove('hidden');
-
-            // Load messages
+            document.getElementById('chat-placeholder').style.display = 'none';
+            const cv = document.getElementById('chat-view');
+            cv.style.display = 'flex';
             await fetchMessages(conv.id);
-
-            // Mark as read
             messages.markRead(conv.id).catch(() => { });
         }
 
-        // ── Fetch and render messages ──
         async function fetchMessages(convId) {
             const thread = document.getElementById('chat-thread');
-            thread.innerHTML = '<p class="text-gray-300 text-xs text-center">Loading…</p>';
+            thread.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Loading…</p>';
             try {
                 const msgs = await messages.getMessagesByConversation(convId);
                 thread.innerHTML = '';
                 if (!msgs || msgs.length === 0) {
-                    thread.innerHTML = '<p class="text-gray-400 text-xs text-center mt-8">No messages yet. Say hello! 👋</p>';
+                    thread.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:2rem;">No messages yet. Say hello! 👋</p>';
                     return;
                 }
                 msgs.forEach(m => renderBubble(m, thread));
                 thread.scrollTop = thread.scrollHeight;
             } catch (e) {
-                thread.innerHTML = '<p class="text-red-400 text-xs text-center">Could not load messages.</p>';
+                thread.innerHTML = '<p style="text-align:center;color:#f87171;font-size:0.85rem;">Could not load messages.</p>';
             }
         }
 
-        // ── Render a single message bubble ──
         function renderBubble(m, thread) {
             const isMine = m.sender_id === user.id;
             const wrapper = document.createElement('div');
-            wrapper.className = `flex ${isMine ? 'justify-end' : 'justify-start'} fade-in`;
+            wrapper.style.display = 'flex';
+            wrapper.style.justifyContent = isMine ? 'flex-end' : 'flex-start';
             const time = new Date(m.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
             wrapper.innerHTML = `
-                <div class="${isMine ? 'bubble-sent' : 'bubble-received'} px-4 py-2.5 text-sm leading-relaxed">
-                    <p>${escapeHtml(m.message_text)}</p>
-                    <p class="text-xs mt-1 ${isMine ? 'text-blue-200' : 'text-gray-400'} text-right">${time}</p>
+                <div class="${isMine ? 'bubble-sent' : 'bubble-recv'}">
+                    <div class="bubble-text">${escapeHtml(m.message_text)}</div>
+                    <div class="bubble-time">${time}</div>
                 </div>
             `;
             thread.appendChild(wrapper);
         }
 
-        // ── Send a reply in an open conversation ──
         async function sendReply() {
             const input = document.getElementById('msg-input');
             const text = input.value.trim();
             if (!text || !activeConvId) return;
-
             const btn = document.getElementById('send-btn');
-            btn.disabled = true;
-            btn.textContent = 'Sending…';
-
+            btn.disabled = true; btn.textContent = 'Sending…';
             try {
-                const msg = await messages.sendMessage(activeConvId, text);
+                await messages.sendMessage(activeConvId, text);
                 input.value = '';
-                btn.disabled = false;
-                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send`;
-
+                btn.disabled = false; btn.textContent = '✈️ Send';
                 const thread = document.getElementById('chat-thread');
-                renderBubble({
-                    sender_id: user.id,
-                    message_text: text,
-                    created_at: new Date().toISOString()
-                }, thread);
+                renderBubble({ sender_id: user.id, message_text: text, created_at: new Date().toISOString() }, thread);
                 thread.scrollTop = thread.scrollHeight;
             } catch (e) {
-                btn.disabled = false;
-                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send`;
+                btn.disabled = false; btn.textContent = '✈️ Send';
                 alert('Failed to send: ' + e.message);
             }
         }
 
-        // ── Send on Enter (Shift+Enter for newline) ──
         document.getElementById('msg-input').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendReply();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
         });
 
-        // ── Helper: escape HTML ──
         function escapeHtml(str) {
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }

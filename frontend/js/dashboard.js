@@ -6,18 +6,23 @@ const checkAuth = () => {
     if (navLinks) {
         if (token && user) {
             navLinks.innerHTML = `
-                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
-                <a href="rooms.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Find Room</a>
-                <a href="dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium transition">Dashboard</a>
-                <a href="messages.html" class="text-gray-700 hover:text-blue-600 font-medium transition flex items-center gap-1">
-                    Messages <span id="unread-badge" class="hidden bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="rooms.html" class="nav-link">Find Room</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="messages.html" class="nav-link" style="display:flex;align-items:center;gap:0.4rem;">
+                    Messages <span id="unread-badge" style="display:none;background:var(--pink);color:#fff;font-size:0.7rem;font-weight:700;padding:0.1rem 0.5rem;border-radius:50px;box-shadow:0 0 10px rgba(236,72,153,0.6);">0</span>
                 </a>
-                <div class="flex items-center gap-3 ml-4 border-l pl-6 border-gray-200">
-                    <a href="profile.html" class="font-medium text-blue-600">${user.name}</a>
-                    <button onclick="logout()" class="text-red-500 hover:text-red-600">Logout</button>
-                </div>
+                <a href="profile.html" class="nav-link" style="color:var(--purple-l);">${user.name}</a>
+                <button onclick="logout()" class="nav-btn" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);box-shadow:none;">Logout</button>
             `;
             updateUnreadCount();
+        } else {
+            navLinks.innerHTML = `
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="rooms.html" class="nav-link">Find Room</a>
+                <a href="login.html" class="nav-link">Login</a>
+                <a href="signup.html" class="nav-btn">Sign Up</a>
+            `;
         }
     }
 };
