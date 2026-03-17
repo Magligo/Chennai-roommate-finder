@@ -5,170 +5,348 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chennai Roommate Finder | Find Your Perfect Room</title>
-    <link rel="stylesheet" href="css/glow.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Hero */
-        .hero {
-            padding: 140px 0 100px;
-            text-align: center;
-            position: relative;
+        :root {
+            /* Overriding style.css for the requested modern moderate theme */
+            --bg-color: #F8FAFC;
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --border-light: #E2E8F0;
+            --paper: #FFFFFF;
+            --radius: 12px;
+            --radius-sm: 8px;
         }
 
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        /* Navbar Specifics */
+        .navbar {
+            background-color: var(--paper);
+            border-bottom: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 16px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .logo {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* Primary Button Override */
+        .btn-primary {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            border: 2px solid var(--primary);
+            padding: 12px 22px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-width: 150px;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* Outline Button */
+        .btn-outline-primary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 22px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-width: 150px;
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 130px 0 90px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .hero-title {
             font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.1;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
             margin-bottom: 1.5rem;
-            color: var(--white);
+            color: var(--text-primary);
         }
-
         .hero-title span {
-            color: var(--purple-l);
+            color: var(--primary);
         }
-
         .hero-sub {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            max-width: 540px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.7;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 3rem; /* Increased spacing before buttons */
+            line-height: 1.6;
         }
-
         .hero-btns {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem; /* Increased gap */
             justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
+            width: 100%;
+        }
+        .badge-light {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 0.4rem 1.25rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 2rem;
         }
 
-        /* Stats */
+        /* Stats Row */
         .stats-row {
             display: flex;
             justify-content: center;
-            gap: 3rem;
+            gap: 2rem;
             flex-wrap: wrap;
-            margin: 3rem 0 0;
+            margin: 4.5rem auto 0;
+            max-width: 900px;
+            width: 100%;
         }
-
         .stat {
+            background: var(--paper);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 1.75rem 2.5rem;
             text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
+        .stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
         .stat-num {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            color: var(--purple-l);
+            color: var(--primary);
         }
-
         .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
             margin-top: 0.25rem;
+            font-weight: 500;
         }
 
-        /* Features */
+        /* Features Section */
         .features-section {
             padding: 100px 0;
-            border-top: 1px solid var(--border);
+            background: var(--paper);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
         }
-
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
         .section-label {
             display: inline-block;
-            font-size: 0.78rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--purple-l);
-            margin-bottom: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
         }
-
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.25rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
-
         .feature-card {
-            padding: 2rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: transform 0.2s, border-color 0.2s;
+            padding: 2.5rem 2rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
         }
-
         .feature-card:hover {
             transform: translateY(-4px);
-            border-color: var(--border2);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
-
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.25rem;
-            font-size: 1.4rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
+            margin: 0 auto 1.5rem;
+            font-size: 1.75rem;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
-
         .feature-title {
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--white);
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
         }
-
         .feature-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.65;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        /* CTA */
+        /* CTA Section */
         .cta-section {
-            padding: 80px 0;
-            border-top: 1px solid var(--border);
+            padding: 100px 0;
+            background: var(--bg-color);
         }
-
         .cta-box {
-            background: var(--bg3);
-            border: 1px solid var(--border2);
-            border-radius: 16px;
-            padding: 4rem 2rem;
+            background: var(--paper);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 5rem 3rem;
             text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+        }
+        .cta-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+        .cta-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-size: 1.15rem;
         }
 
         /* Footer */
         footer {
-            padding: 2rem;
+            padding: 3rem;
             text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            background: var(--paper);
+            border-top: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .content-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
     </style>
 </head>
 
 <body>
-    <nav class="glow-nav">
-        <div class="glow-nav-inner">
-            <a href="index.html" class="glow-logo">🏠 ChennaiRooms</a>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                ChennaiRooms
+            </a>
             <div class="nav-links" id="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="rooms.html" class="nav-link">Find Room</a>
+                <a href="index.html" class="active">Home</a>
+                <a href="rooms.html">Find Room</a>
             </div>
         </div>
     </nav>
 
     <section class="hero">
-        <div class="content-wrap">
-            <div class="badge-purple" style="display:inline-block;margin-bottom:1.5rem;">🏙️ Chennai's #1 Roommate
-                Platform</div>
+        <div class="content-wrap fade-in-up">
+            <div class="badge-light">🏙️ Chennai's #1 Roommate Platform</div>
             <h1 class="hero-title">
                 Find Your Perfect<br><span>Home in Chennai</span>
             </h1>
@@ -177,10 +355,10 @@
                 perfect living space.
             </p>
             <div class="hero-btns">
-                <a href="rooms.html" class="btn-glow-purple">🏠 Browse Rooms</a>
-                <a href="signup.html" class="btn-outline">Post Your Room →</a>
+                <a href="rooms.html" class="btn-primary float-anim">🏠 Browse Rooms</a>
+                <a href="signup.html" class="btn-outline-primary">Post Your Room →</a>
             </div>
-            <div class="stats-row">
+            <div class="stats-row stagger-1 fade-in-up">
                 <div class="stat">
                     <div class="stat-num">500+</div>
                     <div class="stat-label">Rooms Listed</div>
@@ -199,12 +377,12 @@
 
     <section class="features-section">
         <div class="content-wrap">
-            <div style="text-align:center;">
+            <div class="section-header fade-in-up stagger-1">
                 <span class="section-label">Why Choose Us</span>
-                <h2 class="glow-title">Everything you need</h2>
-                <p class="glow-subtitle">We make finding roommates easier than ever before.</p>
+                <h2 class="section-title">Everything you need</h2>
+                <p class="section-subtitle">We make finding roommates easier than ever before.</p>
             </div>
-            <div class="features-grid">
+            <div class="features-grid fade-in-up stagger-2">
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
                     <h3 class="feature-title">Smart Filters</h3>
@@ -229,21 +407,26 @@
 
     <section class="cta-section">
         <div class="content-wrap">
-            <div class="cta-box">
-                <h2 style="font-size:2rem;font-weight:800;color:var(--white);margin-bottom:1rem;">Ready to find your
-                    roommate?</h2>
-                <p style="color:var(--text-muted);margin-bottom:2rem;">Join thousands of Chennai residents who found
+            <div class="cta-box fade-in-up stagger-1">
+                <h2 class="cta-title">Ready to find your roommate?</h2>
+                <p class="cta-subtitle">Join thousands of Chennai residents who found
                     their perfect living space.</p>
-                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-                    <a href="signup.html" class="btn-glow-purple">Get Started Free 🚀</a>
-                    <a href="login.html" class="btn-outline">Sign In</a>
+                <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;">
+                    <a href="signup.html" class="btn-primary float-anim">Get Started Free 🚀</a>
+                    <a href="login.html" class="btn-outline-primary">Sign In</a>
                 </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p style="font-size:1rem;font-weight:700;margin-bottom:0.4rem;color:var(--white);">🏠 ChennaiRooms</p>
+        <div class="footer-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            ChennaiRooms
+        </div>
         <p>© 2026 Chennai Roommate Finder. All rights reserved.</p>
     </footer>
 

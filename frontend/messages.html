@@ -5,63 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages | ChennaiRooms</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/glow.css">
     <style>
         .messages-layout {
-            padding: 40px 0;
-            min-height: calc(100vh - 72px);
-            background-color: var(--bg-color);
+            padding: 90px 0 40px;
+            min-height: 100vh;
         }
 
         .messages-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
         }
 
         .chat-container {
             display: flex;
-            gap: 1.5rem;
-            height: calc(100vh - 220px);
-            min-height: 500px;
-        }
-
-        @media (max-width: 768px) {
-            .chat-container {
-                flex-direction: column;
-                height: auto;
-                min-height: unset;
-            }
+            gap: 1.25rem;
+            height: calc(100vh - 200px);
+            min-height: 520px;
         }
 
         /* Sidebar */
         .conv-sidebar {
-            width: 320px;
+            width: 300px;
             flex-shrink: 0;
-            background: var(--paper);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .conv-sidebar {
-                width: 100%;
-                height: 300px;
-            }
         }
 
         .sidebar-head {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-light);
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
             font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            background: #f8fafc;
+            font-size: 0.9rem;
+            color: var(--white);
+            background: rgba(124, 58, 237, 0.08);
         }
 
         .conv-list {
@@ -70,58 +53,63 @@
         }
 
         .conv-item {
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.25rem;
             cursor: pointer;
             border-left: 3px solid transparent;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             transition: background 0.2s, border-color 0.2s;
         }
 
         .conv-item:hover {
-            background: #f8fafc;
+            background: rgba(124, 58, 237, 0.08);
         }
 
         .conv-item.active {
-            background: #eff6ff;
-            border-left-color: var(--primary);
+            background: rgba(124, 58, 237, 0.14);
+            border-left-color: var(--purple-l);
         }
 
         .conv-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--white);
         }
 
         .conv-room {
-            font-size: 0.8rem;
-            color: var(--secondary);
+            font-size: 0.75rem;
+            color: var(--cyan-l);
             margin-top: 0.2rem;
-            font-weight: 500;
         }
 
         .conv-preview {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.3rem;
+            font-size: 0.775rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .conv-badge {
-            background: var(--accent);
+            background: var(--purple);
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             padding: 0.1rem 0.5rem;
-            border-radius: 12px;
+            border-radius: 50px;
         }
 
         .conv-empty {
             padding: 3rem 1.5rem;
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .conv-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.4;
         }
 
         /* Chat Panel */
@@ -129,17 +117,10 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--paper);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
+            background: rgba(15, 15, 35, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
             overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .chat-panel {
-                height: 500px;
-            }
         }
 
         .chat-placeholder {
@@ -148,8 +129,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
-            background: #f8fafc;
+            color: var(--text-muted);
+            gap: 0.75rem;
+        }
+
+        .chat-placeholder-icon {
+            font-size: 3rem;
+            opacity: 0.3;
         }
 
         .chat-view {
@@ -160,98 +146,104 @@
 
         .chat-head {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: var(--paper);
+            gap: 0.875rem;
+            background: rgba(124, 58, 237, 0.07);
         }
 
         .chat-avatar {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 800;
+            font-size: 0.9rem;
             color: #fff;
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.5);
         }
 
         .chat-name {
             font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--text-primary);
+            font-size: 0.9rem;
+            color: var(--white);
         }
 
         .chat-room-label {
-            font-size: 0.85rem;
-            color: var(--secondary);
-            font-weight: 500;
+            font-size: 0.75rem;
+            color: var(--cyan-l);
         }
 
         .chat-thread {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            background: var(--bg-color);
+            gap: 0.75rem;
+            scroll-behavior: smooth;
         }
 
         .bubble-sent {
             align-self: flex-end;
-            max-width: 75%;
-            background: var(--primary);
+            max-width: 72%;
+            background: linear-gradient(135deg, var(--purple), #6d28d9);
             color: #fff;
-            border-radius: 16px 16px 2px 16px;
-            padding: 0.75rem 1rem;
-            box-shadow: var(--shadow-sm);
+            border-radius: 18px 18px 4px 18px;
+            padding: 0.65rem 1rem;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
         }
 
         .bubble-recv {
             align-self: flex-start;
-            max-width: 75%;
-            background: var(--paper);
-            color: var(--text-primary);
-            border: 1px solid var(--border-dark);
-            border-radius: 16px 16px 16px 2px;
-            padding: 0.75rem 1rem;
-            box-shadow: var(--shadow-sm);
+            max-width: 72%;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text);
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid var(--border);
+            padding: 0.65rem 1rem;
         }
 
         .bubble-text {
-            font-size: 0.95rem;
+            font-size: 0.875rem;
             line-height: 1.5;
         }
 
         .bubble-time {
-            font-size: 0.75rem;
-            margin-top: 0.4rem;
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
             text-align: right;
-            opacity: 0.7;
+        }
+
+        .bubble-sent .bubble-time {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .bubble-recv .bubble-time {
+            color: var(--text-muted);
         }
 
         .chat-input-area {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--border-light);
-            background: var(--paper);
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 10, 20, 0.6);
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             align-items: flex-end;
         }
 
         .chat-input-area textarea {
             flex: 1;
             padding: 0.75rem 1rem;
-            background: #f8fafc;
-            border: 1px solid var(--border-dark);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 0.875rem;
+            color: var(--text);
+            font-size: 0.875rem;
             resize: none;
             outline: none;
             max-height: 120px;
@@ -259,91 +251,70 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
+        .chat-input-area textarea::placeholder {
+            color: var(--text-muted);
+        }
+
         .chat-input-area textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            border-color: var(--purple-l);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
         }
     </style>
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                ChennaiRooms
-            </a>
+    <nav class="glow-nav">
+        <div class="glow-nav-inner">
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
             <div class="nav-links" id="nav-links"></div>
         </div>
     </nav>
 
-    <div class="messages-layout container">
-        <div class="messages-header">
-            <div class="page-header" style="margin-bottom:0; flex-direction:column; gap:0.25rem;">
-                <h1 class="page-title">Messages</h1>
-                <p class="page-subtitle">Your direct conversations with room owners and seekers.</p>
-            </div>
-            <a href="rooms.html" class="btn-primary">Find Rooms</a>
-        </div>
-
-        <div class="chat-container">
-            <!-- Sidebar -->
-            <div class="conv-sidebar">
-                <div class="sidebar-head">Inbox</div>
-                <div class="conv-list" id="conv-list">
-                    <div class="conv-empty" id="conv-empty">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                            style="opacity:0.3; margin-bottom:1rem;">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <p style="font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;">No conversations yet
-                        </p>
-                        <p>Message a room owner to start.</p>
-                    </div>
+    <div class="messages-layout">
+        <div class="content-wrap">
+            <div class="messages-header">
+                <div>
+                    <h1 class="glow-title" style="font-size:1.9rem;">💬 Messages</h1>
+                    <p class="glow-subtitle" style="font-size:0.9rem;">Your direct conversations with room owners and
+                        seekers.</p>
                 </div>
+                <a href="rooms.html" class="btn-glow-purple" style="padding:0.6rem 1.2rem;">🏠 Find Rooms</a>
             </div>
 
-            <!-- Chat Panel -->
-            <div class="chat-panel">
-                <div class="chat-placeholder" id="chat-placeholder">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round" style="opacity:0.2; margin-bottom:1rem;">
-                        <path
-                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                        </path>
-                    </svg>
-                    <p style="font-weight:600;color:var(--text-primary); font-size:1.1rem; margin-bottom:0.25rem;">
-                        Select a conversation</p>
-                    <p style="font-size:0.95rem;">to read and reply</p>
-                </div>
-                <div class="chat-view" id="chat-view">
-                    <div class="chat-head">
-                        <div class="chat-avatar" id="chat-avatar">?</div>
-                        <div>
-                            <div class="chat-name" id="chat-name">—</div>
-                            <div class="chat-room-label" id="chat-room">—</div>
+            <div class="chat-container">
+                <!-- Sidebar -->
+                <div class="conv-sidebar">
+                    <div class="sidebar-head">📬 Inbox</div>
+                    <div class="conv-list" id="conv-list">
+                        <div class="conv-empty" id="conv-empty">
+                            <div class="conv-empty-icon">💬</div>
+                            <p style="font-weight:600;color:var(--text);">No conversations yet</p>
+                            <p style="margin-top:0.3rem;">Message a room owner to start.</p>
                         </div>
                     </div>
-                    <div class="chat-thread" id="chat-thread"></div>
-                    <div class="chat-input-area">
-                        <textarea id="msg-input" rows="2" placeholder="Type your message…"></textarea>
-                        <button id="send-btn" onclick="sendReply()" class="btn-primary" style="flex-shrink:0;">
-                            Send
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                style="margin-left:0.5rem;">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                            </svg>
-                        </button>
+                </div>
+
+                <!-- Chat Panel -->
+                <div class="chat-panel">
+                    <div class="chat-placeholder" id="chat-placeholder">
+                        <div class="chat-placeholder-icon">🗨️</div>
+                        <p style="font-weight:600;color:var(--text);">Select a conversation</p>
+                        <p style="font-size:0.85rem;">to read and reply</p>
+                    </div>
+                    <div class="chat-view" id="chat-view">
+                        <div class="chat-head">
+                            <div class="chat-avatar" id="chat-avatar">?</div>
+                            <div>
+                                <div class="chat-name" id="chat-name">—</div>
+                                <div class="chat-room-label" id="chat-room">—</div>
+                            </div>
+                        </div>
+                        <div class="chat-thread" id="chat-thread"></div>
+                        <div class="chat-input-area">
+                            <textarea id="msg-input" rows="2" placeholder="Type your message…"></textarea>
+                            <button id="send-btn" onclick="sendReply()" class="btn-glow-purple"
+                                style="padding:0.75rem 1.25rem;flex-shrink:0;">✈️ Send</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -380,7 +351,7 @@
                     card.id = `conv-${c.id}`;
                     card.className = 'conv-item';
                     card.innerHTML = `
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.2rem;">
                             <span class="conv-name">${c.other_user_name || 'User'}</span>
                             ${c.unread_count > 0 ? `<span class="conv-badge">${c.unread_count}</span>` : ''}
                         </div>
@@ -398,7 +369,7 @@
                 console.error('Failed to load conversations:', e);
                 const empty = document.getElementById('conv-empty');
                 empty.style.display = 'block';
-                empty.innerHTML = `<div class="conv-empty" style="color:#ef4444;"><p style="font-weight:600;margin-bottom:0.5rem;">Could not load</p><p>${e.message && e.message.toLowerCase().includes('failed to fetch') ? 'Backend not running on port 5000.' : e.message}</p></div>`;
+                empty.innerHTML = `<div class="conv-empty"><div class="conv-empty-icon">⚠️</div><p style="color:#f87171;font-weight:600;">Could not load</p><p>${e.message && e.message.toLowerCase().includes('failed to fetch') ? 'Backend not running on port 5000.' : e.message}</p></div>`;
             }
         }
 
@@ -407,33 +378,30 @@
             document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
             const card = document.getElementById(`conv-${conv.id}`);
             if (card) card.classList.add('active');
-
             document.getElementById('chat-avatar').textContent = (conv.other_user_name || 'U')[0].toUpperCase();
             document.getElementById('chat-name').textContent = conv.other_user_name || 'User';
             document.getElementById('chat-room').textContent = `📍 ${conv.room_title || 'Room'}`;
-
             document.getElementById('chat-placeholder').style.display = 'none';
             const cv = document.getElementById('chat-view');
             cv.style.display = 'flex';
-
             await fetchMessages(conv.id);
             messages.markRead(conv.id).catch(() => { });
         }
 
         async function fetchMessages(convId) {
             const thread = document.getElementById('chat-thread');
-            thread.innerHTML = '<p style="text-align:center;color:var(--text-secondary);font-size:0.9rem;margin-top:2rem;">Loading messages...</p>';
+            thread.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Loading…</p>';
             try {
                 const msgs = await messages.getMessagesByConversation(convId);
                 thread.innerHTML = '';
                 if (!msgs || msgs.length === 0) {
-                    thread.innerHTML = '<p style="text-align:center;color:var(--text-secondary);font-size:0.9rem;margin-top:2rem;">No messages yet. Say hello! 👋</p>';
+                    thread.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:2rem;">No messages yet. Say hello! 👋</p>';
                     return;
                 }
                 msgs.forEach(m => renderBubble(m, thread));
                 thread.scrollTop = thread.scrollHeight;
             } catch (e) {
-                thread.innerHTML = '<p style="text-align:center;color:#ef4444;font-size:0.9rem;margin-top:2rem;">Could not load messages.</p>';
+                thread.innerHTML = '<p style="text-align:center;color:#f87171;font-size:0.85rem;">Could not load messages.</p>';
             }
         }
 
@@ -456,29 +424,17 @@
             const input = document.getElementById('msg-input');
             const text = input.value.trim();
             if (!text || !activeConvId) return;
-
             const btn = document.getElementById('send-btn');
-            const originalContent = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = 'Sending...';
-
+            btn.disabled = true; btn.textContent = 'Sending…';
             try {
                 await messages.sendMessage(activeConvId, text);
                 input.value = '';
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-
+                btn.disabled = false; btn.textContent = '✈️ Send';
                 const thread = document.getElementById('chat-thread');
-                // Remove the "no messages yet" if it's the first message
-                if (thread.innerHTML.includes('No messages yet')) {
-                    thread.innerHTML = '';
-                }
-
                 renderBubble({ sender_id: user.id, message_text: text, created_at: new Date().toISOString() }, thread);
                 thread.scrollTop = thread.scrollHeight;
             } catch (e) {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
+                btn.disabled = false; btn.textContent = '✈️ Send';
                 alert('Failed to send: ' + e.message);
             }
         }

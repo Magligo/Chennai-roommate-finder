@@ -10,10 +10,10 @@ const checkAuth = () => {
                 <a href="rooms.html" class="nav-link">Find Room</a>
                 <a href="dashboard.html" class="nav-link">Dashboard</a>
                 <a href="messages.html" class="nav-link" style="display:flex;align-items:center;gap:0.4rem;">
-                    Messages <span id="unread-badge" style="display:none;background:var(--accent);color:#fff;font-size:0.75rem;font-weight:700;padding:0.1rem 0.5rem;border-radius:12px;">0</span>
+                    Messages <span id="unread-badge" style="display:none;background:var(--pink);color:#fff;font-size:0.7rem;font-weight:700;padding:0.1rem 0.5rem;border-radius:50px;box-shadow:0 0 10px rgba(236,72,153,0.6);">0</span>
                 </a>
-                <a href="profile.html" class="nav-link" style="color:var(--primary);font-weight:600;">${user.name}</a>
-                <button onclick="logout()" class="btn-secondary" style="padding:0.4rem 1rem;font-size:0.875rem;">Logout</button>
+                <a href="profile.html" class="nav-link" style="color:var(--purple-l);">${user.name}</a>
+                <button onclick="logout()" class="nav-btn" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);box-shadow:none;">Logout</button>
             `;
             updateUnreadCount();
         } else {
@@ -21,7 +21,7 @@ const checkAuth = () => {
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="rooms.html" class="nav-link">Find Room</a>
                 <a href="login.html" class="nav-link">Login</a>
-                <a href="signup.html" class="btn-primary" style="padding:0.5rem 1.25rem;">Sign Up</a>
+                <a href="signup.html" class="nav-btn">Sign Up</a>
             `;
         }
     }

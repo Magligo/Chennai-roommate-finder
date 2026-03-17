@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | ChennaiRooms</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/glow.css">
     <style>
         body {
             display: flex;
@@ -13,17 +13,17 @@
             justify-content: center;
             min-height: 100vh;
             padding: 1.5rem;
-            background-color: var(--bg-color);
         }
 
         .auth-card {
             width: 100%;
             max-width: 420px;
-            background: var(--paper);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius);
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 1.75rem;
             padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 80px rgba(124, 58, 237, 0.1);
+            backdrop-filter: blur(20px);
         }
 
         .auth-header {
@@ -31,32 +31,30 @@
             margin-bottom: 2rem;
         }
 
-        .auth-header .logo {
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
         .auth-title {
             font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-weight: 800;
+            color: var(--white);
             margin-top: 0.75rem;
-            letter-spacing: -0.5px;
         }
 
         .auth-sub {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
             margin-top: 0.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
         }
 
         .error-box {
             display: none;
             padding: 0.85rem 1rem;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: var(--radius-sm);
-            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.875rem;
+            color: #f87171;
             font-size: 0.875rem;
             margin-bottom: 1rem;
         }
@@ -71,48 +69,38 @@
         .divider-line {
             flex: 1;
             height: 1px;
-            background: var(--border-light);
+            background: var(--border);
         }
 
         .divider-text {
             font-size: 0.8rem;
-            color: var(--text-secondary);
-            font-weight: 500;
+            color: var(--text-muted);
+            white-space: nowrap;
         }
 
         .auth-footer {
             text-align: center;
             margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+            font-size: 0.875rem;
+            color: var(--text-muted);
         }
 
         .auth-footer a {
-            color: var(--primary);
+            color: var(--purple-l);
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.2s;
         }
 
         .auth-footer a:hover {
-            color: var(--primary-hover);
+            text-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
         }
     </style>
 </head>
 
 <body>
-    <div class="auth-card">
+    <div class="auth-card fade-in-up">
         <div class="auth-header">
-            <a href="index.html" class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                ChennaiRooms
-            </a>
+            <a href="index.html" class="glow-logo">⚡ ChennaiRooms</a>
             <h1 class="auth-title">Welcome Back</h1>
             <p class="auth-sub">Sign in to find your perfect roommate</p>
         </div>
@@ -121,14 +109,14 @@
 
         <form id="login-form">
             <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" id="email" required class="form-control" placeholder="name@example.com">
+                <label class="glow-label">Email Address</label>
+                <input type="email" id="email" required class="glow-input" placeholder="name@example.com">
             </div>
             <div class="form-group">
-                <label class="form-label">Password</label>
-                <input type="password" id="password" required class="form-control" placeholder="••••••••">
+                <label class="glow-label">Password</label>
+                <input type="password" id="password" required class="glow-input" placeholder="••••••••">
             </div>
-            <button type="submit" class="btn-primary" style="width:100%;margin-top:0.75rem;">Sign In</button>
+            <button type="submit" class="btn-glow-purple" style="width:100%;margin-top:0.75rem;">Sign In 🔑</button>
         </form>
 
         <div class="divider">
@@ -138,7 +126,7 @@
         </div>
 
         <p class="auth-footer">
-            Don't have an account? <a href="signup.html">Create Account</a>
+            Don't have an account? <a href="signup.html">Create Account →</a>
         </p>
     </div>
 
